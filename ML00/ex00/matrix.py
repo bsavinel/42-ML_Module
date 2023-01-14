@@ -9,12 +9,10 @@ class MatrixException(Exception):
 
 class Matrix:
 
-#?#####################################################?#
 #!----------------Matirx initialisateur----------------!#
-#?#####################################################?#
 
 	def __init__(self, matrix_data):
-		if isinstance(matrix_data, list):
+		if (isinstance(matrix_data, list)):
 			if not all(len(it) == len(matrix_data[0]) for it in matrix_data):
 				raise MatrixException("Matrix must be rectangular")
 			self.data = matrix_data
@@ -25,9 +23,7 @@ class Matrix:
 		else:
 			raise MatrixException("Matrix must be created with a list or a tuple")
 
-#?##############################################?#
 #!----------------Matrix adition----------------!#
-#?##############################################?#
 
 	def __add__(self, other):
 		if (isinstance(other, Matrix)):
@@ -45,9 +41,7 @@ class Matrix:
 		else:
 			raise MatrixException("Matrix can be added only with another matrix")
 
-#?##################################################?#
 #!----------------Matrix substracion----------------!#
-#?##################################################?#
 
 	def __sub__(self, other):
 		if (isinstance(other, Matrix)):
@@ -65,9 +59,7 @@ class Matrix:
 		else:
 			raise MatrixException("Matrix can be sub only with another matrix")
 
-#?###############################################?#
 #!----------------Matrix division----------------!#
-#?###############################################?#
 
 	def __truediv__(self, scalar):
 		if (isinstance(scalar, int) or isinstance(scalar, float)):
@@ -78,9 +70,7 @@ class Matrix:
 	def __rtruediv__(self, scalar):
 		raise MatrixException("Scalar can't be divided by a matrix")
 
-#?#####################################################?#
 #!----------------Matrix multiplication----------------!#
-#?#####################################################?#
 
 	def __mul__(self, other):
 		if (isinstance(other, Matrix)):
@@ -100,9 +90,7 @@ class Matrix:
 			return type([sum(other.data[j][i] * self.data[i][k] for i in range(self.shape[0])) for j in range(other.shape[0])] for k in range(self.shape[1]))
 		raise MatrixException("Matrix can be multiplied only with another matrix")
 
-#?#############################################?#
 #!----------------Matrix string----------------!#
-#?#############################################?#
 
 	def __str__(self):
 		str = "Matrix size: " + str(self.shape) + "\n Content : "
@@ -117,10 +105,8 @@ class Matrix:
 			str += "\n"
 			str += str(self.data[i])
 		return str
-	
-#?####################################################?#
+
 #!----------------Matrix transposition----------------!#
-#?####################################################?#
 
 	def	T(self):
 		return type([self.data[i][j] for i in range(self.shape[0])] for j in range(self.shape[1]))
@@ -131,9 +117,7 @@ class Matrix:
 
 class Vector(Matrix):
 
-#?#####################################################?#
 #!----------------Vector initialisateur----------------!#
-#?#####################################################?#
 
 	def __init__(self, matrix_data):
 		if (isinstance(matrix_data, list)):
@@ -149,9 +133,7 @@ class Vector(Matrix):
 		else:
 			raise MatrixException("Vector must be created with a list or a tuple")
 
-#?#############################################?#
 #!----------------Vector string----------------!#
-#?#############################################?#
 
 	def __str__(self):
 		str = "Vector size: " + str(self.shape) + "\n Content : "
@@ -167,9 +149,7 @@ class Vector(Matrix):
 			str += str(self.data[i])
 		return str
 
-#?##################################################?#
 #!----------------Vector dot_product----------------!#
-#?##################################################?#
 
 	def dot(self, other):
 		if (isinstance(other, Vector)):
