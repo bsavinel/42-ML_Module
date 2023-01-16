@@ -49,11 +49,7 @@ class TinyStatistician():
 		if check_type(x):
 			tmp = x.copy()
 			tmp.sort()
-			if (len(x) % 4 == 0):
-				return [tmp[int(len(tmp) / 4)], tmp[int(len(tmp) * (3 / 4))]]
-			else:
-				return [(tmp[m.floor(len(tmp) / 4)] + tmp[m.ceil(len(tmp) / 4)]) / 2,
-						(tmp[m.floor(len(tmp) * (3 / 4))] + tmp[m.ceil(len(tmp) * (3 / 4))]) / 2]
+			return [tmp[int(len(tmp) / 4)], tmp[int(len(tmp) * (3 / 4))]]
 		else:
 			return None
 		
@@ -63,7 +59,11 @@ class TinyStatistician():
 		if check_type(x) and isinstance(percentile, (int, float)) and percentile > 0 and percentile < 100:
 			tmp = x.copy()
 			tmp.sort()
-			return (tmp[m.floor(len(tmp) / (percentile / 100))] + tmp[m.ceil(len(tmp) / (percentile / 100))]) / 2,
+			place = (percentile * (len(tmp) - 1)) / 100
+			if ((place + 1) % 1 == 0):
+				return tmp[m.floor(place)]
+			else:
+				return (tmp[m.ceil(place)] * (place - m.floor(place))) + (tmp[m.floor(place)] * (m.ceil(place) - place))
 		else:
 			return None
 
@@ -75,6 +75,7 @@ class TinyStatistician():
 			somme = 0
 			for i in x:
 				somme += (i - moy) ** 2
+			return somme / (len(x) - 1)
 		else:
 			return None
 
@@ -93,9 +94,17 @@ class TinyStatistician():
 if __name__ == "__main__":
 	ts = TinyStatistician()
 	x = [1, 42, 300, 10, 59]
+	print("---------- Mean ----------")
 	print(ts.mean(x))
+	print("---------- Median ----------")
 	print(ts.median(x))
+	print("---------- Quartile ----------")
 	print(ts.quartile(x))
-	print(ts.percentile(x, 25))
+	print("---------- Percentile ----------")
+	print("10 :", ts.percentile(x, 10))
+	print("15 :", ts.percentile(x, 15))
+	print("20 :", ts.percentile(x, 20))
+	print("---------- Variance ----------")
 	print(ts.var(x))
+	print("---------- Standard Deviation ----------")
 	print(ts.std(x))
