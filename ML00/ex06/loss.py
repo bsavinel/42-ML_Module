@@ -4,6 +4,11 @@ import numpy as np
 #!########################################  Function  ########################################!#
 #!############################################################################################!#
 
+def isVector(x):
+	if ((isinstance(x, np.ndarray)) and (x.ndim == 1 or (x.ndim == 2 and x.shape[1] == 1))):
+		return True
+	return False
+
 def predict_(x, theta):
 	"""Computes the vector of prediction y_hat from two non-empty numpy.array.
 	Args:
@@ -17,7 +22,7 @@ def predict_(x, theta):
 	Raises:
 		This function should not raise any Exceptions.
 	"""
-	if ((not isinstance(x, np.ndarray)) or (not isinstance(theta, np.ndarray))):
+	if ((not isVector(x)) or (not isinstance(theta, np.ndarray))):
 		return None
 	copy = x.copy()
 	copy.reshape(-1, 1)
@@ -40,7 +45,7 @@ def loss_elem_(y, y_hat):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	if ((not isinstance(y, np.ndarray)) or (not isinstance(y_hat, np.ndarray))):
+	if ((not isVector(y)) or (not isVector(y_hat))):
 		return None
 	copyY = y.copy()
 	copyYHat = y_hat.copy()
