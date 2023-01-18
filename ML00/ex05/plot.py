@@ -34,7 +34,7 @@ def plot(x, y, theta):
 	Raises:
 		This function should not raise any Exceptions.
 	"""
-	if (x.size == 0 or y.size == 0 or theta.size == 0 or x.ndim != 1 or y.ndim != 1 or theta.ndim != 2 or x.shape[0] != y.shape[0] or theta.shape[0] != 2 or theta.shape[1] != 1):
+	if ((not isinstance(x, np.ndarray)) or (not isinstance(y, np.ndarray)) or (not isinstance(theta, np.ndarray)) or x.size == 0 or y.size == 0 or theta.size == 0 or x.ndim != 1 or y.ndim != 1 or theta.ndim != 2 or x.shape[0] != y.shape[0] or theta.shape[0] != 2 or theta.shape[1] != 1):
 		return
 	plt.plot(x, y, 'bo')
 	plt.plot(x, predict_(x, theta), 'r')
