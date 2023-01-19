@@ -1,10 +1,11 @@
 import numpy as np
-# from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from math import sqrt
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 #!############################################################################################!#
 #!########################################  Function  ########################################!#
 #!############################################################################################!#
+
 def mse_(y, y_hat):
 	"""
 	Description:
@@ -21,8 +22,6 @@ def mse_(y, y_hat):
 	if ((not isinstance(y, np.ndarray)) or (not isinstance(y_hat, np.ndarray)) or y.ndim != 1 or y_hat.ndim != 1 or y.size == 0 or y_hat.size == 0 or y.shape != y_hat.shape):
 		return None
 	return sum((y_hat - y) ** 2) / y.size
-
-
 
 def rmse_(y, y_hat):
 	"""
@@ -92,15 +91,15 @@ if __name__ == '__main__':
 	ret4 = r2score_(x,y)
 	print(ret4)
 	print("\n-------   Result expected   -------\n")
-	# print("## With function of sklearn")
-	# ret5 = mean_squared_error(x,y)
-	# print(ret5)
-	# ret6 = sqrt(mean_squared_error(x,y))
-	# print(ret6)
-	# ret7 = mean_absolute_error(x,y)
-	# print(ret7)
-	# ret8 = r2_score(x,y)
-	# print(ret8)
+	print("## With function of sklearn")
+	ret5 = mean_squared_error(x,y)
+	print(ret5)
+	ret6 = sqrt(mean_squared_error(x,y))
+	print(ret6)
+	ret7 = mean_absolute_error(x,y)
+	print(ret7)
+	ret8 = r2_score(x,y)
+	print(ret8)
 	print("## Brute value")
 	print(4.285714285714286)
 	print(2.0701966780270626)
