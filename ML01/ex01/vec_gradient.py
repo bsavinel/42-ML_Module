@@ -25,20 +25,10 @@ def simple_gradient(x, y, theta):
 	"""
 	if ((not isVector(x)) or (not isVector(y)) or y.shape[0] != x.shape[0] or theta.ndim != 2 or theta.shape[0] != 2 or theta.shape[1] != 1):
 		return None
-	copyX = x.reshape(1, x.shape[0])
-	copyY = y.reshape(1, y.shape[0])
-	xT = copyX.transpose()
-	mul = (copyX * theta) - copyY
-	mul = mul.transpose()
-	xT = xT.reshape(1, xT.shape[0])
-	# mul = mul.reshape(2, mul.shape[0])
-	print(mul)
-	print(xT)
-	mul2 = xT * mul
-	print(mul2.shape)
-	return None
-	# tmp = (xT * ((copyX * theta) - copyY)) / x.shape[0]
-	# return np.array(tmp)
+	copyX = np.insert(x, 0, 1, axis=1)
+	transpX = copyX.transpose()
+	return np.matmul(transpX, (np.matmul(copyX, theta) - y)) / x.shape[0]
+	
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#
@@ -50,10 +40,10 @@ if __name__ == '__main__':
 	theta1 = np.array([2, 0.7]).reshape((-1, 1))
 	theta2 = np.array([1, -0.4]).reshape((-1, 1))
 	ret1 = simple_gradient(x, y, theta1)
-	# ret2 = simple_gradient(x, y, theta2)
+	ret2 = simple_gradient(x, y, theta2)
 	print(ret1)
-	# print(ret2)
-	# print("\n-------   Result expected   -------\n")
-	# print("## This is aproximative result")
-	# print(np.array([[-19.0342], [-586.6687]]))
-	# print(np.array([[-57.8682], [-2230.1229]]))
+	print(ret2)
+	print("\n-------   Result expected   -------\n")
+	print("## This is aproximative result")
+	print(np.array([[-19.0342], [-586.6687]]))
+	print(np.array([[-57.8682], [-2230.1229]]))
