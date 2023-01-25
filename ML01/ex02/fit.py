@@ -22,9 +22,10 @@ def predict(x, theta):
 	Raises:
 		This function should not raise any Exceptions.
 	"""
-	if ((not isinstance(x, np.ndarray)) or (not isinstance(theta, np.ndarray))  or x.size == 0 or theta.size != 2 or x.ndim != 1 or theta.ndim != 2):
+	if ((not isinstance(x, np.ndarray)) or (not isinstance(theta, np.ndarray)) or x.size == 0 or theta.size != 2 or x.shape[1] != 1 or theta.ndim != 2):
 		return None
-	tmp = np.array([float(theta[0] + theta[1] * x[i]) for i in range(x.shape[0])])
+	copyX = x.reshape(-1)
+	tmp = np.array([float(theta[0] + theta[1] * copyX[i]) for i in range(copyX.shape[0])])
 	return tmp.reshape((tmp.shape[0], 1))
 
 def simple_gradient(x, y, theta):
@@ -69,7 +70,7 @@ def fit_(x, y, theta, alpha, max_iter):
 	copyTheta = theta.copy()
 	for i in range(max_iter):
 		copyTheta = copyTheta - (alpha * simple_gradient(x, y, copyTheta))
-	return theta
+	return copyTheta
 
 	
 
@@ -82,7 +83,9 @@ if __name__ == '__main__':
 	y = np.array([[37.4013816], [36.1473236], [45.7655287], [46.6793434], [59.5585554]])
 	theta= np.array([1, 1]).reshape((-1, 1))
 	theta1 = fit_(x, y, theta, alpha=5e-8, max_iter=1500000)
-	predict(x, theta1)
+	ret1 = predict(x, theta1)
+	print(theta1)
+	print(ret1)
 	print("\n-------   Result expected   -------\n")
 	print(np.array([[1.40709365],[1.1150909 ]]))
 	print(np.array([[15.3408728 ],[25.38243697],[36.59126492],[55.95130097],[65.53471499]]))
