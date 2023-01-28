@@ -4,6 +4,27 @@ import numpy as np
 #!########################################  Function  ########################################!#
 #!############################################################################################!#
 
+def check_matrix(m, sizeX, sizeY, dim = 2):
+	"""Check if the matrix corectly match the expected dimension.
+	Args:
+		m: the element to check.
+		sizeX: the number of row, if sizeX = -1 isn't check that.
+		sizeY: the number of collum, if sizeX = -1 isn't check that.
+		dim: the dimension of the matrix. (only 2(default) or 1)
+	Return:
+		True if the matrix match the expected dimension.
+		False if the matrix doesn't match the expected dimension or isn't a np.ndarray.
+	"""
+	if (not isinstance(m, np.ndarray)):
+		return False
+	if (m.ndim != dim or m.size == 0):
+		return False
+	if (sizeX != -1 and m.shape[0] != sizeX):
+		return False
+	if (dim == 2 and sizeY != -1 and m.shape[1] != sizeY):
+		return False
+	return True
+
 def simple_predict(x, theta):
 	"""Computes the vector of prediction y_hat from two non-empty numpy.ndarray.
 	Args:
@@ -16,7 +37,7 @@ def simple_predict(x, theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	if ((not isinstance(x, np.ndarray)) or (not isinstance(theta, np.ndarray)) or x.size == 0 or theta.size != 2 or x.ndim != 1 or theta.ndim != 1):
+	if ((not check_matrix(x, -1, -1, 1)) or (not check_matrix(theta, 2, -1, 1))):
 		return None
 	return np.array([float(theta[0] + theta[1] * x[i]) for i in range(x.shape[0])])
 
