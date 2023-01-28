@@ -12,11 +12,12 @@ def minmax(x):
 	"""
 	if (not isinstance(x, np.ndarray) or x.size == 0):
 		return None
+	if (x.ndim != 1 and not (x.ndim == 2 and x.shape[1] == 1)):
+		return None
 	Xcopy = x.reshape(-1)
 	min = np.min(Xcopy)
 	max = np.max(Xcopy)
 	return (Xcopy - min) / (max - min)
-
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

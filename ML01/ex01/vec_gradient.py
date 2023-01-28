@@ -4,10 +4,26 @@ import numpy as np
 #!########################################  Function  ########################################!#
 #!############################################################################################!#
 
-def isVector(x):
-	if ((isinstance(x, np.ndarray)) and (x.ndim == 2 and x.shape[1] == 1)):
-		return True
-	return False
+def check_matrix(m, sizeX, sizeY, dim = 2):
+	"""Check if the matrix corectly match the expected dimension.
+	Args:
+		m: the element to check.
+		sizeX: the number of row, if sizeX = -1 isn't check that.
+		sizeY: the number of collum, if sizeX = -1 isn't check that.
+		dim: the dimension of the matrix. (only 2(default) or 1)
+	Return:
+		True if the matrix match the expected dimension.
+		False if the matrix doesn't match the expected dimension or isn't a np.ndarray.
+	"""
+	if (not isinstance(m, np.ndarray)):
+		return False
+	if (m.ndim != dim or m.size == 0):
+		return False
+	if (sizeX != -1 and m.shape[0] != sizeX):
+		return False
+	if (dim == 2 and sizeY != -1 and m.shape[1] != sizeY):
+		return False
+	return True
 
 def simple_gradient(x, y, theta):
 	""" Computes a gradient vector from three non-empty numpy.array, without any for loop.
@@ -23,7 +39,7 @@ def simple_gradient(x, y, theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
-	if ((not isVector(x)) or (not isVector(y)) or y.shape[0] != x.shape[0] or theta.ndim != 2 or theta.shape[0] != 2 or theta.shape[1] != 1):
+	if (not check_matrix(x, -1, 1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, 2, 1)):
 		return None
 	copyX = np.insert(x, 0, 1, axis=1)
 	transpX = copyX.transpose()

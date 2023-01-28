@@ -12,11 +12,12 @@ def zscore(x):
 	"""
 	if (not isinstance(x, np.ndarray) or x.size == 0):
 		return None
+	if (x.ndim != 1 and not (x.ndim == 2 and x.shape[1] == 1)):
+		return None
 	Xcopy = x.reshape(-1)
 	mean = np.mean(Xcopy)
 	std = np.std(Xcopy)
 	return (Xcopy - mean) / std
-
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#
