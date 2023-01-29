@@ -50,6 +50,24 @@ if __name__ == "__main__":
 	plot(Xpill.reshape(-1), Yscore.reshape(-1), linear_model1.thetas, "Linear Regression after fit", "Micrograms", "Score")
 	plot(Xpill.reshape(-1), Yscore.reshape(-1), linear_model2.thetas, "Linear Regression after fit", "Micrograms", "Score")
 
+	linear_model3 = MyLR(np.array([[0.0], [0.0]]))
+	valTheta0 = np.linspace(80, 96, 6)
+	valTheta1 = np.linspace(-14, -4, 100)
+	evol = np.linspace(-14, -4, 100)
+	fig, axe = plt.subplots()
+	for i in valTheta0:
+		val = np.array([])
+		linear_model3.thetas[0] = i
+		for j in valTheta1:
+			linear_model3.thetas[1] = j
+			val = np.append(val, linear_model3.loss_(Yscore, linear_model3.predict_(Xpill)))
+		plt.plot(evol, val, '-')
+	axe.set_ylim([10, 150])
+	plt.grid()
+	plt.show()
+
+
+
 	print("\n-------   Result with my linear regression   -------\n")
 	print(MyLR.mse_(Yscore, Y_model1))
 	print(MyLR.mse_(Yscore, Y_model2))
