@@ -25,7 +25,7 @@ def predict_(x, theta):
 	if ((not isVector(x)) or (not isinstance(theta, np.ndarray))):
 		return None
 	copy = x.copy()
-	copy.reshape(-1, 1)
+	copy = copy.reshape(-1, 1)
 	if ( copy.size == 0 or theta.size != 2 or copy.ndim != 2 or theta.ndim != 2):
 		return None
 	tmp = np.array([float(theta[0] + theta[1] * copy[i]) for i in range(copy.shape[0])])
@@ -49,8 +49,8 @@ def loss_elem_(y, y_hat):
 		return None
 	copyY = y.copy()
 	copyYHat = y_hat.copy()
-	copyY.reshape(-1, 1)
-	copyYHat.reshape(-1, 1)
+	copyY = copyY.reshape(-1, 1)
+	copyYHat = copyYHat.reshape(-1, 1)
 	if (copyY.size == 0 or copyYHat.size == 0 or copyY.ndim != 2 or copyYHat.ndim != 2 or copyY.shape != copyYHat.shape):
 		return None
 	return np.array([(copyY[i] - copyYHat[i]) ** 2 for i in range(copyY.shape[0])])

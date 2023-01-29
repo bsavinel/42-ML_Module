@@ -26,8 +26,8 @@ def loss_(y, y_hat):
 		return None
 	copyY = y.copy()
 	copyYHat = y_hat.copy()
-	copyY.reshape(-1, 1)
-	copyYHat.reshape(-1, 1)
+	copyY = copyY.reshape(-1, 1)
+	copyYHat = copyYHat.reshape(-1, 1)
 	if (copyY.size == 0 or copyYHat.size == 0 or copyY.ndim != 2 or copyYHat.ndim != 2 or copyY.shape != copyYHat.shape):
 		return None
 	ret = (copyYHat - copyY)
