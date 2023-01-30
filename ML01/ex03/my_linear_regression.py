@@ -73,7 +73,7 @@ class MyLinearRegression():
 		copyY = y.copy()
 		copyYHat = y_hat.copy()
 		copyY = copyY.reshape(-1, 1)
-		ccopyYHat = opyYHat.reshape(-1, 1)
+		copyYHat = copyYHat.reshape(-1, 1)
 		if (not check_matrix(copyY, -1, 1) or not check_matrix(copyYHat, copyYHat.shape[0], 1)):
 			return None
 		return np.array([(copyY[i] - copyYHat[i]) ** 2 for i in range(copyY.shape[0])])
