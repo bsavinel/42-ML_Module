@@ -46,7 +46,7 @@ def logistic_predict_(x, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	copyx = np.insert(x, 0, 1, axis = 1)
-	return 1 / (1 + np.exp(np.dot(copyx, theta) * -1))	
+	return sigmoid_(np.dot(copyx, theta))
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#
