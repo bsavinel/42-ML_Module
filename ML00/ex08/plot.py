@@ -56,7 +56,7 @@ def plot_with_loss(x, y, theta):
 		This function should not raise any Exception.
 	"""
 	if (not check_matrix(x, -1, -1, 1) or not check_matrix(y, x.shape[0], -1, 1) or not check_matrix(theta, 2, 1)):
-		return
+		return None
 	plt.plot(x, y, 'bo')
 	ret = predict_(x, theta)
 	plt.plot(x, ret, 'r')

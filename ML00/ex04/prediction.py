@@ -56,7 +56,7 @@ if __name__ == "__main__":
 	theta4 = np.array([[-3], [1]])
 	ret1 = predict_(x, theta1)
 	ret2 = predict_(x, theta2)
-	ret3 = predict_(x, theta3) # c'est X dans le sujet mais sans doute faute de frappe
+	ret3 = predict_(x, theta3) # c'est X dans le sujet mais c'est une faute de frappe
 	ret4 = predict_(x, theta4)
 	print(ret1)
 	print(ret2)

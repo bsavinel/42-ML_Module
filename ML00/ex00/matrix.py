@@ -21,7 +21,7 @@ class Matrix:
 			self.shape = matrix_data
 			self.data = [[0 for i in range(self.shape[1])] for j in range(self.shape[0])]
 		else:
-			raise MatrixException("Matrix must be created with a list or a tuple")
+			raise MatrixException("Matrix must be created with a list with the content or a tuple with the dimension")
 
 #!----------------Matrix adition----------------!#
 

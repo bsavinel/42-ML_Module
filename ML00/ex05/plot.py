@@ -56,7 +56,7 @@ def plot(x, y, theta):
 		This function should not raise any Exceptions.
 	"""
 	if (not check_matrix(x, -1, -1, 1) or not check_matrix(y, x.shape[0], -1, 1) or not check_matrix(theta, 2, 1, 2)):
-		return 
+		return None
 	plt.plot(x, y, 'bo')
 	plt.plot(x, predict_(x, theta), 'r')
 	plt.show()
