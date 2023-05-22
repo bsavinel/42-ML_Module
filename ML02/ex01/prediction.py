@@ -42,7 +42,7 @@ def predict_(x, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	newX = np.insert(x, 0, 1, axis = 1) #add 1 to the first collum to have the first theta value as constant
-	return (newX @ theta).astype(float)
+	return np.dot(newX, theta).astype(float)
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

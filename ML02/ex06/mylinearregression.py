@@ -35,7 +35,8 @@ def gradient(x, y, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	xCopy = np.insert(x,0, 1, axis = 1)
-	return (np.matmul(xCopy.transpose(), np.matmul(xCopy, theta) - y)) / x.shape[0]
+	TxCopy = xCopy.transpose()
+	return (TxCopy @ (xCopy @ theta - y)) / x.shape[0]
 
 #!##########################################################################################!#
 #!########################################  Classe  ########################################!#
@@ -64,7 +65,7 @@ class MyLinearRegression():
 		if (not check_matrix(x, -1, -1) or not check_matrix(self.theta, x.shape[1] + 1, 1)):
 			return None
 		newX = np.insert(x, 0, 1, axis = 1) #add 1 to the first collum to have the first theta value as constant
-		return (newX @ self.theta).astype(float)
+		return np.dot(newX, self.theta).astype(float)
 
 	def loss_elem_(self, y, y_hat):
 		if ((not isVector(y)) or (not isVector(y_hat))):

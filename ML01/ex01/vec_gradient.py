@@ -43,7 +43,7 @@ def simple_gradient(x, y, theta):
 		return None
 	copyX = np.insert(x, 0, 1, axis=1)
 	transpX = copyX.transpose()
-	return np.matmul(transpX, (np.matmul(copyX, theta) - y)) / x.shape[0]
+	return (transpX @ (copyX @ theta - y)) / x.shape[0]
 	
 
 #!####################################################################################################!#

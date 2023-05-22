@@ -47,5 +47,6 @@ if __name__ == "__main__":
 	ret2 = add_polynomial_features(x, 6)
 	print(ret1)
 	print(ret2)
+	print("\n-------   Result expected   -------\n")
 	print(np.array([[ 1, 1, 1],[ 2, 4, 8],[ 3, 9, 27],[ 4, 16, 64],[ 5, 25, 125]]))
 	print(np.array([[ 1, 1, 1, 1, 1, 1],[ 2, 4, 8, 16, 32, 64],[ 3, 9, 27, 81, 243, 729],[ 4, 16, 64, 256, 1024, 4096],[ 5, 25, 125, 625, 3125, 15625]]))

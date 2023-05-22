@@ -65,10 +65,9 @@ if __name__ == "__main__":
 	linearModel1 = MyLR(theta1, alpha=2.5e-5)
 	linearModel2 = MyLR(theta2, alpha=2.5e-5)
 	linearModel3 = MyLR(theta3, alpha=2.5e-5, max_iter=6000)
-	linearModel4 = MyLR(theta4, alpha=2.5e-6, max_iter=1500)
-	linearModel5 = MyLR(theta5, alpha=1e-8, max_iter=1000)
+	linearModel4 = MyLR(theta4, alpha=1.5e-6, max_iter=3500)
+	linearModel5 = MyLR(theta5, alpha=4e-8, max_iter=3000)
 	linearModel6 = MyLR(theta6, alpha=1e-9, max_iter=400)
-
 	linearModel1.fit_(1, Yscore)
 	linearModel2.fit_(add_polynomial_features(Xpill, 2), Yscore)
 	linearModel3.fit_(add_polynomial_features(Xpill, 3), Yscore)
@@ -94,7 +93,7 @@ if __name__ == "__main__":
 	plt.plot(Xpill, predict1, 'r.')
 	plt.plot(Xpill, predict2, 'y.')
 	plt.plot(Xpill, predict3, 'g.')
-	# plt.plot(Xpill, predict4, '.')
-	# plt.plot(Xpill, predict5, '.')
-	# plt.plot(Xpill, predict6, '.')
+	plt.plot(Xpill, predict4, 'c.') # trop aproximatif
+	plt.plot(Xpill, predict5, 'm.')
+	plt.plot(Xpill, predict6, 'k.')
 	plt.show()

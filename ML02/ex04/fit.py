@@ -41,7 +41,7 @@ def predict_(x, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	newX = np.insert(x, 0, 1, axis = 1) #add 1 to the first collum to have the first theta value as constant
-	return (newX @ theta).astype(float)
+	return np.dot(newX, theta).astype(float)
 
 def gradient(x, y, theta):
 	"""Computes a gradient vector from three non-empty numpy.array, without any for-loop.
@@ -62,7 +62,8 @@ def gradient(x, y, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	xCopy = np.insert(x,0, 1, axis = 1)
-	return (np.matmul(xCopy.transpose(), np.matmul(xCopy, theta) - y)) / x.shape[0]
+	TxCopy = xCopy.transpose()
+	return (TxCopy @ (xCopy @ theta - y)) / x.shape[0]
 
 def fit_(x, y, theta, alpha, max_iter):
 	"""

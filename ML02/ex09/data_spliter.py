@@ -25,6 +25,13 @@ def check_matrix(m, sizeX, sizeY, dim = 2):
 		return False
 	return True
 
+def unison_shuffled_copies(a, b):
+	"""Shuffle two arrays in the same way."""
+	if (len(a) != len(b)):
+		return None
+	p = np.random.permutation(len(a))
+	return a[p], b[p]
+
 def data_spliter(x, y, proportion):
 	"""Shuffles and splits the dataset (given by x and y) into a training and a test set,
 	while respecting the given proportion of examples to be kept in the training set.
@@ -44,10 +51,7 @@ def data_spliter(x, y, proportion):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or proportion > 1 or proportion < 0):
 		return None
 	index_prop = int(x.shape[0] * proportion)
-	copyX = np.copy(x)
-	copyY = np.copy(y)
-	np.random.shuffle(copyX)
-	np.random.shuffle(copyY)
+	copyX, copyY = unison_shuffled_copies(x, y)
 	return (copyX[:index_prop], copyX[index_prop:], copyY[:index_prop], copyY[index_prop:])
 
 
@@ -64,12 +68,12 @@ if __name__ == "__main__":
 	ret2 = data_spliter(x1, y, 0.5)
 	ret3 = data_spliter(x2, y, 0.8)
 	ret4 = data_spliter(x2, y, 0.5)
-	print(ret1)
-	print(ret2)
-	print(ret3)
-	print(ret4)
+	print("Exemple 1 :", ret1)
+	print("Exemple 2 :", ret2)
+	print("Exemple 3 :", ret3)
+	print("Exemple 4 :", ret4)
 	print("\n-------   Result expected   -------\n")
-	print((np.array([ 1, 59, 42, 300]).reshape((-1,1)), np.array([10]).reshape((-1,1)), np.array([0, 0, 1, 0]).reshape((-1,1)), np.array([1]).reshape((-1,1))))
-	print((np.array([59, 10]).reshape((-1,1)), np.array([ 1, 300, 42]).reshape((-1,1)), np.array([0, 1]).reshape((-1,1)), np.array([0, 0, 1]).reshape((-1,1))))
-	print((np.array([[ 10, 42],[300, 59],[ 59, 1],[300, 10]]),np.array([[ 1, 42]]),np.array([0, 1, 0, 1]).reshape((-1,1)),np.array([0]).reshape((-1,1))))
-	print((np.array([[59, 1],[10, 42]]),np.array([[300, 10],[300, 59],[ 1, 42]]),np.array([0, 0]).reshape((-1,1)),np.array([1, 1, 0]).reshape((-1,1))))
+	print("Exemple 1 :", (np.array([ 1, 59, 42, 300]).reshape((-1,1)), np.array([10]).reshape((-1,1)), np.array([0, 0, 1, 0]).reshape((-1,1)), np.array([1]).reshape((-1,1))))
+	print("Exemple 2 :", (np.array([59, 10]).reshape((-1,1)), np.array([ 1, 300, 42]).reshape((-1,1)), np.array([0, 1]).reshape((-1,1)), np.array([0, 0, 1]).reshape((-1,1))))
+	print("Exemple 3 :", (np.array([[ 10, 42],[300, 59],[ 59, 1],[300, 10]]),np.array([[ 1, 42]]),np.array([0, 1, 0, 1]).reshape((-1,1)),np.array([0]).reshape((-1,1))))
+	print("Exemple 4 :", (np.array([[59, 1],[10, 42]]),np.array([[300, 10],[300, 59],[ 1, 42]]),np.array([0, 0]).reshape((-1,1)),np.array([1, 1, 0]).reshape((-1,1))))
