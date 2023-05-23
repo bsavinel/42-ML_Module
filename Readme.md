@@ -6,11 +6,11 @@
 
 ### <center>Les matrices</center>
 
-Les matrices sont un moyen pour ordonner les donnes et de simplifier leur utilisation, car des méthodes existent pour appliquer une même opération à plusieurs donnes simultanément. Elles sont généralement organisées de manière à avoir les données pour la prédiction d'une valeur par ligne.
+La matrice est un moyen pour ordonner des donnes et simplifier leurs utilisations. Par exemple, grâce à des méthodes qui existent pour appliquer une même opération à plusieurs données simultanément. Elles sont généralement organisées de manière à avoir les données pour une prédiction par ligne.
 
 ### <center>Prédiction Linéaire (du premier degré)</center>
 
-Une prédiction linéaire et le résultat de l'opération _`ax + b = ŷ`_ ou _a_ et _b_ sont des constantes et _x_ une valeur utilise pour prédire un _ŷ_ associé. Le but du machine learning est d'avoir pour chaque _x_ un _ŷ_ le plus proche de la valeur attendue _y_.
+Une prédiction linéaire et le résultat de l'opération _`ax + b = ŷ`_ où _a_ et _b_ sont des constantes et _x_ une valeur utilise pour prédire un _ŷ_ associé. Le but du machine learning (avec une prédiction linéaire) est d'avoir pour chaque _x_ un _ŷ_ le plus proche de la valeur attendue _y_, pour pouvoir reproduire l'operation sur des _x_ dont le _y_ est inconnu.
 
 _a_ et _b_ sont stockés dans une matrice que l'on nommera _θ_.
 
