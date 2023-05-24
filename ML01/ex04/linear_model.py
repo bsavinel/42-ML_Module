@@ -57,9 +57,12 @@ def plot(x, y, theta, title = "Linear Regression", xlabel = "x", ylabel = "y"):
 	plt.title(title)
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
-	plt.plot(x, y, 'bo')
 	plt.plot(x, predict_(x.reshape((-1,1)), theta), 'sy--')
+	plt.plot(x, y, 'bo')
 	plt.grid()
+	plt.xlabel("Quantity of blue pill (in micrograms)")
+	plt.ylabel("Spade driving score")
+	plt.legend(['$S_{predier}(pills)$', '$S_{true}(pills)$'])
 	plt.show()
 
 #!####################################################################################################!#
@@ -90,8 +93,8 @@ if __name__ == "__main__":
 
 	linear_model3 = MyLR(np.array([[0.0], [0.0]]))
 	valTheta0 = np.linspace(80, 96, 6)
-	valTheta1 = np.linspace(-14, -4, 100)
-	evol = np.linspace(-14, -4, 100)
+	valTheta1 = np.linspace(-14, -3, 100)
+	evol = np.linspace(-14, -3, 100)
 	fig, axe = plt.subplots()
 	for i in valTheta0:
 		val = np.array([])
@@ -102,6 +105,15 @@ if __name__ == "__main__":
 		plt.plot(evol, val, '-')
 	axe.set_ylim([10, 150])
 	plt.grid()
+	plt.title("Evolution of the loss for different values of $θ_0$")
+	plt.ylabel('cost function $J(θ_0,θ_1)$')
+	plt.xlabel('$θ_1$')
+	plt.legend(['$J((θ_0=c_0,θ_1)$',
+				'$J((θ_0=c_1,θ_1)$',
+				'$J((θ_0=c_2,θ_1)$',
+				'$J((θ_0=c_3,θ_1)$',
+				'$J((θ_0=c_4,θ_1)$',
+				'$J((θ_0=c_5,θ_1)$',])
 	plt.show()
 
 
