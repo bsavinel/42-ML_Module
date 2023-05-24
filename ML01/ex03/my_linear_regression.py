@@ -33,9 +33,27 @@ def isVector(x):
 def simple_gradient(x, y, theta):
 	if (not check_matrix(x, -1, 1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, 2, 1)):
 		return None
-	nabla0 = float((sum(((theta[1] * x) + theta[0]) - y)) / x.shape[0])
-	nabla1 = float((sum((((theta[1] * x) + theta[0]) - y) * x)) / x.shape[0])
-	return np.array([[nabla0], [nabla1]])
+	copyX = np.insert(x, 0, 1, axis=1)
+	transpX = copyX.transpose()
+	return (transpX @ (copyX @ theta - y)) / x.shape[0]
+
+def add_intercept(x):
+	"""Adds a column of 1's to the non-empty numpy.array x.
+	Args:
+		x: has to be a numpy.array of dimension m * n.
+	Returns:
+		X, a numpy.array of dimension m * (n + 1).
+		None if x is not a numpy.array.
+		None if x is an empty numpy.array.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	if ((not isinstance(x, np.ndarray)) or x.size == 0):
+		return None
+	tmp = x.copy()
+	if (tmp.ndim == 1):
+		tmp.resize((tmp.shape[0], 1))
+	return np.insert(tmp, 0, 1, axis=1)
 
 #!##########################################################################################!#
 #!########################################  Classe  ########################################!#
@@ -63,9 +81,7 @@ class MyLinearRegression():
 	def predict_(self, x):
 		if (not check_matrix(x, -1, 1)):
 			return None
-		copyX = x.reshape(-1)
-		tmp = np.array([float(self.thetas[0] + self.thetas[1] * copyX[i]) for i in range(copyX.shape[0])])
-		return tmp.reshape((tmp.shape[0], 1))
+		return np.dot(add_intercept(x), self.thetas)
 
 	def loss_elem_(self, y, y_hat):
 		if ((not isVector(y)) or (not isVector(y_hat))):

@@ -4,13 +4,50 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 from my_linear_regression import MyLinearRegression as MyLR
 
+def check_matrix(m, sizeX, sizeY, dim = 2):
+	"""Check if the matrix corectly match the expected dimension.
+	Args:
+		m: the element to check.
+		sizeX: the number of row, if sizeX = -1 isn't check that.
+		sizeY: the number of collum, if sizeX = -1 isn't check that.
+		dim: the dimension of the matrix. (only 2(default) or 1)
+	Return:
+		True if the matrix match the expected dimension.
+		False if the matrix doesn't match the expected dimension or isn't a np.ndarray.
+	"""
+	if (not isinstance(m, np.ndarray)):
+		return False
+	if (m.ndim != dim or m.size == 0):
+		return False
+	if (sizeX != -1 and m.shape[0] != sizeX):
+		return False
+	if (dim == 2 and sizeY != -1 and m.shape[1] != sizeY):
+		return False
+	return True
+
+def add_intercept(x):
+	"""Adds a column of 1's to the non-empty numpy.array x.
+	Args:
+		x: has to be a numpy.array of dimension m * n.
+	Returns:
+		X, a numpy.array of dimension m * (n + 1).
+		None if x is not a numpy.array.
+		None if x is an empty numpy.array.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	if ((not isinstance(x, np.ndarray)) or x.size == 0):
+		return None
+	tmp = x.copy()
+	if (tmp.ndim == 1):
+		tmp.resize((tmp.shape[0], 1))
+	return np.insert(tmp, 0, 1, axis=1)
 
 def predict_(x, theta):
-
-	if ((not isinstance(x, np.ndarray)) or (not isinstance(theta, np.ndarray))  or x.size == 0 or theta.size != 2 or x.ndim != 1 or theta.ndim != 2):
+	if (not check_matrix(x, -1, 1) or not check_matrix(theta, 2, 1)):
 		return None
-	tmp = np.array([float(theta[0] + theta[1] * x[i]) for i in range(x.shape[0])])
-	return tmp
+	return np.dot(add_intercept(x), theta)
+
 
 def plot(x, y, theta, title = "Linear Regression", xlabel = "x", ylabel = "y"):
 	if ((not isinstance(x, np.ndarray)) or (not isinstance(y, np.ndarray)) or (not isinstance(theta, np.ndarray)) or x.size == 0 or y.size == 0 or theta.size == 0 or x.ndim != 1 or y.ndim != 1 or theta.ndim != 2 or x.shape[0] != y.shape[0] or theta.shape[0] != 2 or theta.shape[1] != 1):
@@ -21,7 +58,7 @@ def plot(x, y, theta, title = "Linear Regression", xlabel = "x", ylabel = "y"):
 	plt.xlabel(xlabel)
 	plt.ylabel(ylabel)
 	plt.plot(x, y, 'bo')
-	plt.plot(x, predict_(x, theta), 'sy--')
+	plt.plot(x, predict_(x.reshape((-1,1)), theta), 'sy--')
 	plt.grid()
 	plt.show()
 
@@ -33,7 +70,6 @@ if __name__ == "__main__":
 	data = pd.read_csv("are_blue_pills_magics.csv")
 	Xpill = np.array(data["Micrograms"]).reshape(-1,1)
 	Yscore = np.array(data["Score"]).reshape(-1,1)
-
 	linear_model1 = MyLR(np.array([[89.0], [-8]]))
 	linear_model2 = MyLR(np.array([[89.0], [-6]]))
 
@@ -41,8 +77,10 @@ if __name__ == "__main__":
 	Y_model2 = linear_model2.predict_(Xpill)
 	linear_model1.predict_(Xpill)
 	Yscore = Yscore.reshape(-1)
+
 	Y_model1 = Y_model1.reshape(-1)
 	Y_model2 = Y_model2.reshape(-1)
+
 	plot(Xpill.reshape(-1), Yscore.reshape(-1), linear_model1.thetas, "Linear Regression before fit", "Micrograms", "Score")
 	plot(Xpill.reshape(-1), Yscore.reshape(-1), linear_model2.thetas, "Linear Regression before fit", "Micrograms", "Score")
 	linear_model1.fit_(Xpill.reshape(-1,1), Yscore.reshape(-1,1))
