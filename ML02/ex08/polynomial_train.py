@@ -68,7 +68,7 @@ if __name__ == "__main__":
 	linearModel4 = MyLR(theta4, alpha=1.5e-6, max_iter=3500)
 	linearModel5 = MyLR(theta5, alpha=4e-8, max_iter=3000)
 	linearModel6 = MyLR(theta6, alpha=1e-9, max_iter=400)
-	linearModel1.fit_(1, Yscore)
+	linearModel1.fit_(Xpill, Yscore)
 	linearModel2.fit_(add_polynomial_features(Xpill, 2), Yscore)
 	linearModel3.fit_(add_polynomial_features(Xpill, 3), Yscore)
 	linearModel4.fit_(add_polynomial_features(Xpill, 4), Yscore)

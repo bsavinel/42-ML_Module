@@ -27,7 +27,7 @@ def check_matrix(m, sizeX, sizeY, dim = 2):
 
 def unison_shuffled_copies(a, b):
 	"""Shuffle two arrays in the same way."""
-	if (len(a) != len(b)):
+	if (len(a) != len(b) or len(a) == 0):
 		return None
 	p = np.random.permutation(len(a))
 	return a[p], b[p]
