@@ -60,8 +60,8 @@ class MyLinearRegression():
 		tmpY = y.reshape(-1)
 		if (not check_matrix(x, -1, self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
+		self.theta = np.copy(self.theta.astype('float64'))
 		for i in range(self.max_iter):
-			# print(self.theta, gradient(x, y, self.theta))
 			self.loss_evolution.append(self.rmse_(tmpY, self.predict_(x).reshape(-1)))
 			self.theta = self.theta - (self.alpha * gradient(x, y, self.theta))
 

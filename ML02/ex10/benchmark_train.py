@@ -124,7 +124,7 @@ if __name__ == "__main__":
 			linearModel.fit_(tmpXtrain, Ytrain)
 			predict = denormalizer(linearModel.predict_(tmpXeval), Y)
 			loss = MyLR.rmse_(TrueYeval.reshape(-1), predict.reshape(-1))
-			print(key.format(i, j),loss)
+			print(key.format(i, j + 1),loss)
 			plt.plot(linearModel.loss_evolution, color[j])
 			model_loss[key.format(i, j)] = loss
 		plt.title("Evolution of the loss function during the fit")

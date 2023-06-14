@@ -93,7 +93,7 @@ if __name__ == "__main__":
 	plt.plot(Xpill, predict1, 'r.')
 	plt.plot(Xpill, predict2, 'y.')
 	plt.plot(Xpill, predict3, 'g.')
-	plt.plot(Xpill, predict4, 'c.') # trop aproximatif
+	plt.plot(Xpill, predict4, 'c.')
 	plt.plot(Xpill, predict5, 'm.')
 	plt.plot(Xpill, predict6, 'k.')
 	plt.show()

@@ -45,7 +45,7 @@ if __name__ == "__main__":
 	data = pd.read_csv("spacecraft_data.csv")
 	X = np.array(data[["Age","Thrust_power","Terameters"]])
 	Y = np.array(data[["Sell_price"]])
-	my_lreg = MyLR(np.array([1.0, 1.0, 1.0, 1.0]).reshape(-1, 1),  alpha = 5.5e-5, max_iter = 600000)
+	my_lreg = MyLR(np.array([1.0, 1.0, 1.0, 1.0]).reshape(-1, 1),  alpha = 1e-5, max_iter = 600000)
 	print(my_lreg.mse_(Y, my_lreg.predict_(X)))
 	my_lreg.fit_(X,Y)
 	print(my_lreg.theta)

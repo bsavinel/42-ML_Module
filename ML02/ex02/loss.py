@@ -46,9 +46,8 @@ def loss_(y, y_hat):
 	y_hatCopy = y_hat.copy().reshape((-1, 1))
 	if (yCopy.shape != y_hatCopy.shape):
 		return None
-	ratio = 1 / (2 * yCopy.shape[0])
 	diff = y_hatCopy - yCopy
-	return np.dot(diff.transpose(), diff)[0][0] * ratio
+	return np.dot(diff.transpose(), diff)[0][0] / (2 * yCopy.shape[0])
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

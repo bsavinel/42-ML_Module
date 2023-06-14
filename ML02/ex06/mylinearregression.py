@@ -58,8 +58,9 @@ class MyLinearRegression():
 	def fit_(self, x, y):
 		if (not check_matrix(x, -1, self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
+		self.theta = np.copy(self.theta.astype('float64'))
 		for i in range(self.max_iter):
-			self.theta = self.theta - (self.alpha * gradient(x, y, self.theta))
+			self.theta = self.theta - self.alpha * gradient(x, y, self.theta)
 
 	def predict_(self, x):
 		if (not check_matrix(x, -1, -1) or not check_matrix(self.theta, x.shape[1] + 1, 1)):
