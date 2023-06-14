@@ -64,10 +64,10 @@ def log_loss_(y, y_hat, eps=1e-15):
 	if (not check_matrix(y, -1, 1) or not check_matrix(y_hat, y.shape[0], 1) or not isinstance(eps, float)):
 		return None
 	copyYHat = y_hat.copy()
-	copyYHat[copyYHat == 0] = eps
-	copyYHat[copyYHat == 1] = 1 + eps
+	copyYHat = np.where(copyYHat == 1, copyYHat - eps, copyYHat)
+	copyYHat = np.where(copyYHat == 0, copyYHat + eps, copyYHat)
 	somme = np.sum(y * np.log(copyYHat) + (1 - y) * np.log(1 - copyYHat))
-	return (somme / y.shape[0]) * -1
+	return (somme / -y.shape[0])
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#
