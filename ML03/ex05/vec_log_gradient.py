@@ -30,6 +30,23 @@ def sigmoid_(x):
 		return None
 	return 1 / (1 + np.exp(x * -1))	
 
+def logistic_predict_(x, theta):
+	"""Computes the vector of prediction y_hat from two non-empty numpy.ndarray.
+	Args:
+		x: has to be an numpy.ndarray, a vector of dimension m * n.
+		theta: has to be an numpy.ndarray, a vector of dimension (n + 1) * 1.
+	Returns:
+		y_hat as a numpy.ndarray, a vector of dimension m * 1.
+		None if x or theta are empty numpy.ndarray.
+		None if x or theta dimensions are not appropriate.
+	Raises:
+		This function should not raise any Exception.
+	"""
+	if (not check_matrix(x, -1, -1) or not check_matrix(theta, x.shape[1] + 1, 1)):
+		return None
+	copyx = np.insert(x, 0, 1, axis = 1)
+	return sigmoid_(np.dot(copyx, theta))
+
 def log_gradient(x, y, theta):
 	"""Computes a gradient vector from three non-empty numpy.ndarray, with a for-loop. The three arrays must have compatibl
 	Args:
@@ -46,7 +63,7 @@ def log_gradient(x, y, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	copyX = np.insert(x, 0, 1, axis = 1)
-	return np.dot(copyX.T, sigmoid_(np.dot(copyX, theta)) - y) / x.shape[0]
+	return np.dot(copyX.T, logistic_predict_(x,theta) - y) / x.shape[0]
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#
