@@ -113,6 +113,8 @@ if __name__ == "__main__":
 	color = ["b", "r", "g", "y", "c", "m", "k", "w"]
 
 	key = "Column {} with {} polinomial features"
+	labelKey = "{} polinomial features"
+	titleKey = "Evolution of the loss function during the fit for th column {}"
 
 	model_loss = {}
 	for i in range(0, 3):
@@ -125,11 +127,12 @@ if __name__ == "__main__":
 			predict = denormalizer(linearModel.predict_(tmpXeval), Y)
 			loss = MyLR.rmse_(TrueYeval.reshape(-1), predict.reshape(-1))
 			print(key.format(i, j + 1),loss)
-			plt.plot(linearModel.loss_evolution, color[j])
+			plt.plot(linearModel.loss_evolution, color[j], label=labelKey.format(j + 1))
 			model_loss[key.format(i, j)] = loss
-		plt.title("Evolution of the loss function during the fit")
+		plt.title(titleKey.format(i))
 		plt.xlabel("Iteration")
 		plt.ylabel("Loss")
+		plt.legend()
 		plt.show()
 
 	print ("\nThe best is with :", min(model_loss, key=model_loss.get))

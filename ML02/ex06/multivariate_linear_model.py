@@ -7,18 +7,24 @@ from mylinearregression import MyLinearRegression as MyLR
 #!########################################  Function  ########################################!#
 #!############################################################################################!#
 
-def fistPart(Sell_price, other, theta ,alpha, max_iter):
+def fistPart(Sell_price, other, theta ,alpha, max_iter, xlabel):
 	linearModel = MyLR(theta, alpha, max_iter)
 	linearModel.fit_(other, Sell_price)
-	plt.plot(other, Sell_price, 'bo')
-	plt.plot(other, linearModel.predict_(other), 'r.')
+	plt.plot(other, Sell_price, 'bo', label="Sell price")
+	plt.plot(other, linearModel.predict_(other), 'r.', label="Predicted sell price")
+	plt.xlabel(xlabel)
+	plt.ylabel("y: sell price (in keuros)")
 	plt.grid()
+	plt.legend()
 	plt.show()
 
-def secondPart(Sell_price, other, predict):
-	plt.plot(other, Sell_price, 'bo')
-	plt.plot(other, predict, 'r.')
+def secondPart(Sell_price, other, predict, xlabel):
+	plt.plot(other, Sell_price, 'bo', label="Sell price")
+	plt.plot(other, predict, 'r.', label="Predicted sell price")
+	plt.xlabel(xlabel)
+	plt.ylabel("y: sell price (in keuros)")
 	plt.grid()
+	plt.legend()
 	plt.show()
 
 
@@ -33,9 +39,9 @@ if __name__ == "__main__":
 	Thrust_power = np.array(data["Thrust_power"]).reshape(-1,1)
 	Terameters = np.array(data["Terameters"]).reshape(-1,1)
 
-	fistPart(Sell_price, Age, np.array([[650], [-1]]), 2.5e-5, 200000)
-	fistPart(Sell_price, Thrust_power, np.array([[60], [-1]]), 5.5e-5, 200000)
-	fistPart(Sell_price, Terameters, np.array([[200], [12]]), 7.5e-5, 200000)
+	fistPart(Sell_price, Age, np.array([[650], [-1]]), 2.5e-5, 200000, "x1: age (in years)")
+	fistPart(Sell_price, Thrust_power, np.array([[60], [-1]]), 5.5e-5, 200000, "x2: thrust power (in 10Km/s)")
+	fistPart(Sell_price, Terameters, np.array([[200], [12]]), 7.5e-5, 200000, "x3: distance totalizer value of spacecraft (in Tmeters)")
 
 	myLR_age = MyLR(np.array([[1000.0], [-1.0]]), alpha = 2.5e-5, max_iter = 100000)
 	myLR_age.fit_(Age[:,0].reshape(-1,1), Sell_price)
@@ -52,9 +58,9 @@ if __name__ == "__main__":
 	print(my_lreg.mse_(Y, my_lreg.predict_(X)))
 
 	predict = my_lreg.predict_(X)
-	secondPart(Sell_price, Age, predict)
-	secondPart(Sell_price, Thrust_power, predict)
-	secondPart(Sell_price, Terameters, predict)
+	secondPart(Sell_price, Age, predict, "x1: age (in years)")
+	secondPart(Sell_price, Thrust_power, predict, "x2: thrust power (in 10Km/s)")
+	secondPart(Sell_price, Terameters, predict, "x3: distance totalizer value of spacecraft (in Tmeters)")
 
 	print("\n-------   Aproximative result   -------\n")
 	print(55736.86719)
