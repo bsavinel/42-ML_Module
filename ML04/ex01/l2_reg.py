@@ -1,5 +1,16 @@
 import numpy as np
 
+def check_matrix(m, sizeX = -1, sizeY = -1, dim = 2):
+	if (not isinstance(m, np.ndarray)):
+		return False
+	if (m.ndim != dim or m.size == 0):
+		return False
+	if (sizeX != -1 and m.shape[0] != sizeX):
+		return False
+	if (dim == 2 and sizeY != -1 and m.shape[1] != sizeY):
+		return False
+	return True
+
 def iterative_l2(theta):
 	"""Computes the L2 regularization of a non-empty numpy.ndarray, with a for-loop.
 	Args:
@@ -10,6 +21,8 @@ def iterative_l2(theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if (not check_matrix(theta, -1, 1)):
+		return None
 	ret = 0
 	newTheta = np.copy(theta).reshape(-1)
 	for i in range(1, newTheta.shape[0]):
@@ -27,6 +40,8 @@ def l2(theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if (not check_matrix(theta, -1, 1)):
+		return None
 	newTheta = np.copy(theta).reshape(-1)
 	newTheta[0] = 0
 	return np.dot(newTheta, newTheta)
