@@ -1,5 +1,16 @@
 import numpy as np
 
+def check_matrix(m, sizeX = -1, sizeY = -1, dim = 2):
+	if (not isinstance(m, np.ndarray)):
+		return False
+	if (m.ndim != dim or m.size == 0):
+		return False
+	if (sizeX != -1 and m.shape[0] != sizeX):
+		return False
+	if (dim == 2 and sizeY != -1 and m.shape[1] != sizeY):
+		return False
+	return True
+
 def l2(theta):
 	"""Computes the L2 regularization of a non-empty numpy.ndarray, without any for-loop.
 	Args:
@@ -10,6 +21,8 @@ def l2(theta):
 	Raises:
 		This function should not raise any Exception.
 	"""
+	if (not check_matrix(theta, -1, 1)):
+		return None
 	newTheta = np.copy(theta).reshape(-1)
 	newTheta[0] = 0
 	return np.dot(newTheta, newTheta)
@@ -28,11 +41,10 @@ def reg_loss_(y, y_hat, theta, lambda_):
 	Raises:
 		This function should not raise any Exception.
 	"""
-
-
+	if (not check_matrix(y, -1, 1) or not check_matrix(y_hat, y.shape[0], 1) or not check_matrix(theta, -1, 1) or not isinstance(lambda_, float)):
+		return None
 	sub = y_hat.reshape(-1) - y.reshape(-1)
-	print(sub)
-	return (np.dot(sub,sub) + (lambda_ * l2(theta))) / 2 * y.shape[0]
+	return (np.dot(sub,sub) + (lambda_ * l2(theta))) / (2 * y.shape[0])
 
 if __name__ == "__main__":
 	y = np.array([2, 14, -13, 5, 12, 4, -19]).reshape((-1, 1))
