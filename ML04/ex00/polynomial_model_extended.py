@@ -34,15 +34,10 @@ def add_polynomial_features(x, power):
 	"""
 	if (not check_matrix(x, -1, -1) or not isinstance(power, int)):
 		return None
-	newx = np.copy(x)
-	for i in range(power - 1):
-		newx = np.concatenate([x, newx], axis=1)
-	puiss = np.arange(1, power + 1)
-	puiss = np.repeat(puiss, x.shape[1]).reshape((1, -1))
-	pui = np.copy(puiss)
-	for i in range(x.shape[0] - 1):
-		pui = np.concatenate([pui, puiss])
-	return np.power(newx, pui)
+	ret = np.empty((x.shape[0], 0), dtype=int)
+	for i in range(1, power + 1):
+		ret = np.concatenate((ret, x ** i), axis=1)
+	return ret
 
 if __name__ == "__main__":
 	x = np.arange(1,11).reshape(5, 2)
