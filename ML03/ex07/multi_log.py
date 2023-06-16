@@ -3,8 +3,7 @@ import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
 from my_logistic_regression import check_matrix, MyLogisticRegression as MyLR
-import sys
-import random
+
 
 def unison_shuffled_copies(a, b, seed):
 	if (len(a) != len(b) or len(a) == 0):
@@ -98,17 +97,29 @@ Yeval = Yeval.reshape(-1)
 resultComp = np.array(resultComp).reshape(-1)
 ax.plot(Yeval, Xeval[:,0], Xeval[:,1], label="True value", marker='.', linestyle='None')
 ax.plot(resultComp, Xeval[:,0], Xeval[:,1], label="Prediction", marker='.', linestyle='None')
+ax.set_title('Repartion in function of the weight and the height')
+ax.set_xlabel("zipcode of the civilisation")
+ax.set_ylabel('Weight')
+ax.set_zlabel('Height')
 ax.legend()
 plt.show()
 
 ax = plt.axes(projection='3d')
 ax.plot(Yeval, Xeval[:,1], Xeval[:,2], label="True value", marker='.', linestyle='None')
 ax.plot(resultComp, Xeval[:,1], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
+ax.set_title('Repartion in function of the height and the bone density')
+ax.set_xlabel("zipcode of the civilisation")
+ax.set_ylabel('Height')
+ax.set_zlabel('Bone density')
 ax.legend()
 plt.show()
 
 ax = plt.axes(projection='3d')
 ax.plot(Yeval, Xeval[:,0], Xeval[:,2], label="True value", marker='.', linestyle='None')
 ax.plot(resultComp, Xeval[:,0], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
+ax.set_title('Repartion in function of the weight and the bone density')
+ax.set_xlabel("zipcode of the civilisation")
+ax.set_ylabel('Weight')
+ax.set_zlabel('Bone density')
 ax.legend()
 plt.show()
