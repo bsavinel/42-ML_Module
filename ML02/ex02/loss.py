@@ -42,12 +42,12 @@ def loss_(y, y_hat):
 	"""
 	if ((not check_matrix(y, -1, -1, 1) and not check_matrix(y, -1, 1)) or not isinstance(y_hat, np.ndarray)):
 		return None
-	yCopy = y.copy().reshape((-1, 1))
-	y_hatCopy = y_hat.copy().reshape((-1, 1))
+	yCopy = y.copy().reshape(-1)
+	y_hatCopy = y_hat.copy().reshape(-1)
 	if (yCopy.shape != y_hatCopy.shape):
 		return None
 	diff = y_hatCopy - yCopy
-	return np.dot(diff.transpose(), diff)[0][0] / (2 * yCopy.shape[0])
+	return np.dot(diff.T, diff) / (2 * yCopy.shape[0])
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

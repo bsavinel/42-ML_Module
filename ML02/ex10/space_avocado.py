@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from mylinearregression import MyLinearRegression as MyLR, check_matrix
+import pickle
 
 #!############################################################################################!#
 #!########################################  Function  ########################################!#
@@ -94,47 +95,70 @@ def denormalizer(x, list1):
 #!####################################################################################################!#
 
 if __name__ == "__main__":
+
 	data = pd.read_csv("space_avocado.csv")
 	X = np.array(data[["weight", "prod_distance", "time_delivery"]]).reshape(-1,3)
 	Y = np.array(data["target"]).reshape(-1,1)
-	
 	Xnorm = normalizer(X, X)
-	# X = np.array([[15, 90, 36], [84, 55, 66], [87, 84, 29]])
-	# Xnorm =normalizer( X,X )
-	# print(Xnorm)
-	# print(denormalizer(Xnorm, X))
 	Ynorm = normalizer(Y, Y).reshape(-1,1)
-
 	Xtrain, Xeval, Ytrain, Yeval = data_spliter(Xnorm, Ynorm, 0.8)
-	theta = np.array([[0],[20],[0],[-10]]).reshape(-1,1)
-	
-	linearModel = MyLR(theta, alpha=0.1, max_iter=100000)
-	linearModel.fit_(Xtrain, Ytrain)
-
-	predict = linearModel.predict_(Xeval)
-	print(linearModel.theta)
-
-	print(MyLR.r2score_(Yeval.reshape(-1), predict.reshape(-1)))
-	TrueXEval = denormalizer(Xeval, X)
 	TrueYEval = denormalizer(Yeval, Y)
+	TrueXEval = denormalizer(Xeval, X)
+
+
+	try:
+		file = open('model.pickel', 'rb')
+		data = pickle.load(file)
+	except:
+		print("Error: model file opening failed")
+		exit()
+	file.close()
+	max_loss = -1
+	model_loss = {}
+	key = "Column {} with {} polinomial features"
+	for elem in data:
+			tmpXtrain = add_polynomial_features(Xtrain[:,elem[0]].reshape(-1,1), elem[1] + 1)
+			tmpXeval = add_polynomial_features(Xeval[:,elem[0]].reshape(-1,1), elem[1] + 1)
+			theta = np.ones((elem[1] + 2, 1))
+			linearModel = MyLR(elem[2], alpha=0.01, max_iter=1500)
+			predict = denormalizer(linearModel.predict_(tmpXeval), Y)
+			loss = MyLR.rmse_(TrueYEval.reshape(-1), predict.reshape(-1))
+			print(key.format(elem[0], elem[1] + 1),loss)
+			model_loss[key.format(elem[0], elem[1])] = loss
+			if (loss < max_loss or max_loss == -1):
+				best = elem
+				max_loss = loss	
+	print ("\nThe best is with :", min(model_loss, key=model_loss.get))
+
+
+	theta = np.ones((best[1] + 2, 1))
+	linearModel = MyLR(theta, alpha=0.01, max_iter=1500)
+	XtrainBest = add_polynomial_features(Xtrain[:,best[0]].reshape(-1,1), best[1] + 1)
+	XevalBest = add_polynomial_features(Xeval[:,best[0]].reshape(-1,1), best[1] + 1)
+	linearModel.fit_(XtrainBest, Ytrain)
+
+	predict = linearModel.predict_(XevalBest)
+	print("Theta of the best model train :",linearModel.theta)
 	TruePredict = denormalizer(predict, Y)
+	print("RMSE of the best model :",MyLR.rmse_(TrueYEval.reshape(-1), TruePredict.reshape(-1)))
+
 	plt.plot(TrueXEval[:,0], TrueYEval, 'bo', label="Price")
 	plt.plot(TrueXEval[:,0], TruePredict, 'g.', label="Predicted price")
-	plt.ylabel("Weight")
-	plt.xlabel("Price")
+	plt.xlabel("Weight")
+	plt.ylabel("Price")
 	plt.legend()
 	plt.show()
 
 	plt.plot(TrueXEval[:,1], TrueYEval, 'bo', label="Price")
 	plt.plot(TrueXEval[:,1], TruePredict, 'g.', label="Predicted price")
-	plt.ylabel("Distance")
-	plt.xlabel("Price")
+	plt.xlabel("Distance")
+	plt.ylabel("Price")
 	plt.legend()
 	plt.show()
 
 	plt.plot(TrueXEval[:,2], TrueYEval, 'bo', label="Price")
 	plt.plot(TrueXEval[:,2], TruePredict, 'g.', label="Predicted price")
-	plt.ylabel("Time")
-	plt.xlabel("Price")
+	plt.xlabel("Time")
+	plt.ylabel("Price")
 	plt.legend()
 	plt.show()

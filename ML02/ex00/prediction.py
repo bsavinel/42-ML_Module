@@ -42,8 +42,8 @@ def simple_predict(x, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	newX = np.insert(x, 0, 1, axis = 1) #add 1 to the first collum to have the first theta value as constant
-	tmpTheta = theta.reshape((-1,))
-	return np.array([np.sum(newX[i] * tmpTheta) for i in range(newX.shape[0])]).reshape((-1, 1))
+	tmpTheta = theta.reshape(-1)
+	return np.array([np.sum([a * b for a,b in zip(newX[i],tmpTheta)]) for i in range(newX.shape[0])]).reshape((-1, 1))
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

@@ -45,8 +45,8 @@ def gradient(x, y, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	xCopy = np.insert(x,0, 1, axis = 1)
-	TxCopy = xCopy.transpose()
-	return (TxCopy @ (xCopy @ theta - y)) / x.shape[0]
+	return (xCopy.T @ (xCopy @ theta - y)) / x.shape[0]
+
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from mylinearregression import MyLinearRegression as MyLR, check_matrix
+import pickle
 
 #!############################################################################################!#
 #!########################################  Function  ########################################!#
@@ -115,8 +116,10 @@ if __name__ == "__main__":
 	key = "Column {} with {} polinomial features"
 	labelKey = "{} polinomial features"
 	titleKey = "Evolution of the loss function during the fit for th column {}"
-
 	model_loss = {}
+
+	tab = []
+
 	for i in range(0, 3):
 		for j in range(0,4):
 			tmpXtrain = add_polynomial_features(Xtrain[:,i].reshape(-1,1), j + 1)
@@ -129,10 +132,16 @@ if __name__ == "__main__":
 			print(key.format(i, j + 1),loss)
 			plt.plot(linearModel.loss_evolution, color[j], label=labelKey.format(j + 1))
 			model_loss[key.format(i, j)] = loss
+			tab.append([i, j, linearModel.theta])
 		plt.title(titleKey.format(i))
 		plt.xlabel("Iteration")
 		plt.ylabel("Loss")
 		plt.legend()
 		plt.show()
+
+	file = open('model.pickel', 'wb')
+	pickle.dump(tab, file)
+	file.close()
+
 
 	print ("\nThe best is with :", min(model_loss, key=model_loss.get))
