@@ -63,7 +63,7 @@ def log_gradient(x, y, theta):
 	if (not check_matrix(x, -1, -1) or not check_matrix(y, x.shape[0], 1) or not check_matrix(theta, x.shape[1] + 1, 1)):
 		return None
 	copyX = np.insert(x, 0, 1, axis = 1)
-	return np.dot(copyX.T, logistic_predict_(x,theta) - y) / x.shape[0]
+	return copyX.T @ (logistic_predict_(x,theta) - y) / x.shape[0]
 
 #!####################################################################################################!#
 #!##############################################  TEST  ##############################################!#

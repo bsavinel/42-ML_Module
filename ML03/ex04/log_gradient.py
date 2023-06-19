@@ -64,9 +64,12 @@ def log_gradient(x, y, theta):
 		return None
 	tmp = []
 	copyX = np.insert(x, 0, 1, axis = 1)
-	sigmoDot = logistic_predict_(x, theta) - y
+	sigmoDot = logistic_predict_(x, theta)
 	for j in range(theta.shape[0]):
-		tmp.append(np.sum(sigmoDot * copyX[:, j].reshape((-1, 1))) / x.shape[0])
+		somme = 0
+		for i in range(x.shape[0]):
+			somme += ((sigmoDot[i] - y[i][0]) * copyX[i, j])
+		tmp.append(somme / x.shape[0])
 	return np.array(tmp).reshape((-1, 1))
 	
 #!####################################################################################################!#

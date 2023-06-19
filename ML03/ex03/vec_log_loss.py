@@ -96,7 +96,7 @@ if __name__ == '__main__':
 	print(ret1)
 	print(ret2)
 	print(ret3)
-	print("\n-------   Result expected   -------\n")
+	print("\n-------   Example Result   -------\n")
 	print(0.018149927917808714)
 	print(2.4825011602472347)
 	print(2.993853310859968)

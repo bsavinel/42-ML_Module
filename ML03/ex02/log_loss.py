@@ -66,7 +66,9 @@ def log_loss_(y, y_hat, eps=1e-15):
 	copyYHat = y_hat.copy()
 	copyYHat = np.where(copyYHat == 1, copyYHat - eps, copyYHat)
 	copyYHat = np.where(copyYHat == 0, copyYHat + eps, copyYHat)
-	somme = np.sum(y * np.log(copyYHat) + (1 - y) * np.log(1 - copyYHat))
+	somme = 0.
+	for i in range(copyYHat.shape[0]):
+		somme += y[i][0] * np.log(copyYHat[i][0]) + (1 - y[i][0]) * np.log(1 - copyYHat[i][0])
 	return (somme / -y.shape[0])
 
 #!####################################################################################################!#
@@ -74,7 +76,6 @@ def log_loss_(y, y_hat, eps=1e-15):
 #!####################################################################################################!#
 
 if __name__ == '__main__':
-	# Example 1:
 	y1 = np.array([1]).reshape((-1, 1))
 	x1 = np.array([4]).reshape((-1, 1))
 	y2 = np.array([[1], [0], [1], [0], [1]])
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 	print(ret1)
 	print(ret2)
 	print(ret3)
-	print("\n-------   Result expected   -------\n")
+	print("\n-------   Example Result   -------\n")
 	print(0.01814992791780973)
 	print(2.4825011602474483)
 	print(2.9938533108607053)

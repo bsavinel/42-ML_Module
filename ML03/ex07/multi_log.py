@@ -68,7 +68,6 @@ for i in range(4):
 	myLR = MyLR(np.ones((4,1)), 0.1, 100000)
 	myLR.fit_(XtrainNorm, tmpTrain)
 	Yhat = myLR.predict_(XevalNorm)
-	YhatComp = np.where(Yhat >= 0.5, 1, 0)
 	prediction.append(Yhat.reshape(-1))
 
 

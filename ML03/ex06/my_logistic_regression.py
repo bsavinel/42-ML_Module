@@ -68,7 +68,7 @@ class MyLogisticRegression():
 		if (not check_matrix(x, -1, self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
 		copyX = np.insert(x, 0, 1, axis = 1)
-		return np.dot(copyX.T, sigmoid_(np.dot(copyX, self.theta)) - y) / x.shape[0]
+		return copyX.T @ (self.predict_(x) - y) / x.shape[0]
 
 	def fit_(self, x, y):
 		if (not check_matrix(x, -1, self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):

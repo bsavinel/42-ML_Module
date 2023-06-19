@@ -52,14 +52,21 @@ def normalizer_multiline(x, list):
 #!#####################################   Programe   ##############################################
 #!#################################################################################################
 
-zipcode = random.randint(0, 3)
+zipcode = -1
 for (i, arg) in enumerate(sys.argv):
-	if (arg.startswith('-zipcode=') or arg.startswith('zipcode=–') and len(arg) == 10):
+	if (arg.startswith('-zipcode=') or arg.startswith('–zipcode=')):
 		try:
+			if (len(arg) != 10 or not arg[9].isdigit() or int(arg[9]) > 3 or int(arg[9]) < 0):
+				raise ValueError("Error: zipcode must be 0, 1, 2 or 3")
 			zipcode = int(arg[9])
 		except:
-			print("Error: zipcode must be 0, 1, 2 or 3")
+			print("Error: zipcode must be 0, 1, 2 or 3", "Usage: python mono_log.py -zipcode=[0-3]", sep="\n")
+			exit()
 		break
+
+if (zipcode == -1):
+	print("Error: no zipcode found", "Usage: python mono_log.py -zipcode=[0-3]", sep="\n")
+	exit()
 
 if (zipcode == 0):
 	planet = "The flying cities of Venus"
@@ -85,15 +92,24 @@ XevalNorm = normalizer_multiline(Xeval, data)
 
 myLR = MyLR(np.ones((4,1)), 0.1, 150000)
 myLR.fit_(XtrainNorm, Ytrain)
+
+
+YhatTrain = myLR.predict_(XtrainNorm)
+YhatTrainComp = np.where(YhatTrain >= 0.5, 1, 0)
+count = 0
+for i in range(Ytrain.shape[0]):
+	if (Ytrain[i] == YhatTrainComp[i]):
+		count += 1
+print("Test accuracy:", count / Ytrain.shape[0])
+
+
 Yhat = myLR.predict_(XevalNorm)
 YhatComp = np.where(Yhat >= 0.5, 1, 0)
-
-
 count = 0
 for i in range(Yeval.shape[0]):
 	if (Yeval[i] == YhatComp[i]):
 		count += 1
-print("Accuracy:", count / Yeval.shape[0])
+print("Eval accuracy:", count / Yeval.shape[0])
 
 
 ax = plt.axes(projection='3d')
