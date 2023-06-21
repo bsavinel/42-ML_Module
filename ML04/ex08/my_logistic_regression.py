@@ -39,14 +39,14 @@ class MyLogisticRegression():
 	"""
 
 	supported_penalities = ['l2']
-	def __init__(self, theta, alpha=0.001, max_iter=1000, penalty='l2', lambda_=1.0):
+	def __init__(self, theta, alpha=0.001, max_iter=1000, penality='l2', lambda_=1.0):
 		if ((not isinstance(alpha, float)) or (not isinstance(max_iter, int)) or max_iter < 0 or not check_matrix(theta, -1, 1)):
 			raise ValueError 
 		self.alpha = alpha
 		self.max_iter = max_iter
 		self.theta = theta
-		self.penalty = penalty
-		self.lambda_ = lambda_ if penalty in self.supported_penalities else 0
+		self.penality = penality
+		self.lambda_ = lambda_ if penality in self.supported_penalities else 0
 		self.loss_evolution = []
 
 	def predict_(self, x):
@@ -75,14 +75,14 @@ class MyLogisticRegression():
 		return (dot1 + dot2) / (-y.shape[0])
 	
 	def loss_(self, y, y_hat):
-		if (self.penalty != 'l2'):
+		if (self.penality != 'l2'):
 			return self.no_reg_loss_(y, y_hat)
 		if (not check_matrix(y, -1, 1) or not check_matrix(y_hat, y.shape[0], 1)):
 			return None
 		return self.no_reg_loss_(y, y_hat) + self.lambda_ / (2 * y.shape[0]) * self.l2(self.theta)
 
-	def log_gradient(self, x, y):
-		if (not check_matrix(x, -1 , self.thetas.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
+	def gradient_(self, x, y):
+		if (not check_matrix(x, -1 , self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
 		newTheta = np.copy(self.theta).reshape(-1,1)
 		newTheta[0][0] = 0
