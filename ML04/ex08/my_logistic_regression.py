@@ -117,6 +117,10 @@ class MyLogisticRegression():
 		tmpY_hat = y_hat.copy().reshape(-1)
 		truePositive = sum((tmpY == pos_label) & (tmpY_hat == pos_label))
 		falsePositive = sum((tmpY != pos_label) & (tmpY_hat == pos_label))
+		if (truePositive == 0 and falsePositive != 0):
+			return 0.0
+		elif (falsePositive == 0):
+			return 1.0
 		return truePositive / (truePositive + falsePositive)
 
 	@staticmethod
@@ -127,6 +131,10 @@ class MyLogisticRegression():
 		tmpY_hat = y_hat.copy().reshape(-1)
 		truePositive = sum((tmpY == pos_label) & (tmpY_hat == pos_label))
 		falseNegative = sum((tmpY == pos_label) & (tmpY_hat != pos_label))
+		if (truePositive == 0 and falseNegative != 0):
+			return 0.0
+		elif (falseNegative == 0):
+			return 1.0
 		return truePositive / (truePositive + falseNegative)
 
 	@staticmethod	
@@ -135,4 +143,6 @@ class MyLogisticRegression():
 			return None
 		precision = MyLogisticRegression.precision_score_(y, y_hat, pos_label)
 		recall = MyLogisticRegression.recall_score_(y, y_hat, pos_label)
+		if (precision == 0 or recall == 0):
+			return 0.0
 		return (2 * precision * recall) / (precision + recall)

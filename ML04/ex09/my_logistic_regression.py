@@ -37,15 +37,16 @@ class MyLogisticRegression():
 	Description:
 		My personnal logistic regression to classify things.
 	"""
+
 	supported_penalities = ['l2']
-	def __init__(self, theta, alpha=0.001, max_iter=1000, penalty='l2', lambda_=1.0):
+	def __init__(self, theta, alpha=0.001, max_iter=1000, penality='l2', lambda_=1.0):
 		if ((not isinstance(alpha, float)) or (not isinstance(max_iter, int)) or max_iter < 0 or not check_matrix(theta, -1, 1)):
 			raise ValueError 
 		self.alpha = alpha
 		self.max_iter = max_iter
 		self.theta = theta
-		self.penalty = penalty
-		self.lambda_ = lambda_ if penalty in self.supported_penalities else 0
+		self.penality = penality
+		self.lambda_ = lambda_ if penality in self.supported_penalities else 0
 		self.loss_evolution = []
 
 	def predict_(self, x):
@@ -74,13 +75,13 @@ class MyLogisticRegression():
 		return (dot1 + dot2) / (-y.shape[0])
 	
 	def loss_(self, y, y_hat):
-		if (self.penalty != 'l2'):
+		if (self.penality != 'l2'):
 			return self.no_reg_loss_(y, y_hat)
 		if (not check_matrix(y, -1, 1) or not check_matrix(y_hat, y.shape[0], 1)):
 			return None
 		return self.no_reg_loss_(y, y_hat) + self.lambda_ / (2 * y.shape[0]) * self.l2(self.theta)
 
-	def log_gradient(self, x, y):
+	def gradient_(self, x, y):
 		if (not check_matrix(x, -1 , self.theta.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
 		newTheta = np.copy(self.theta).reshape(-1,1)
@@ -116,6 +117,10 @@ class MyLogisticRegression():
 		tmpY_hat = y_hat.copy().reshape(-1)
 		truePositive = sum((tmpY == pos_label) & (tmpY_hat == pos_label))
 		falsePositive = sum((tmpY != pos_label) & (tmpY_hat == pos_label))
+		if (truePositive == 0 and falsePositive != 0):
+			return 0.0
+		elif (falsePositive == 0):
+			return 1.0
 		return truePositive / (truePositive + falsePositive)
 
 	@staticmethod
@@ -126,6 +131,10 @@ class MyLogisticRegression():
 		tmpY_hat = y_hat.copy().reshape(-1)
 		truePositive = sum((tmpY == pos_label) & (tmpY_hat == pos_label))
 		falseNegative = sum((tmpY == pos_label) & (tmpY_hat != pos_label))
+		if (truePositive == 0 and falseNegative != 0):
+			return 0.0
+		elif (falseNegative == 0):
+			return 1.0
 		return truePositive / (truePositive + falseNegative)
 
 	@staticmethod	
@@ -134,4 +143,6 @@ class MyLogisticRegression():
 			return None
 		precision = MyLogisticRegression.precision_score_(y, y_hat, pos_label)
 		recall = MyLogisticRegression.recall_score_(y, y_hat, pos_label)
+		if (precision == 0 or recall == 0):
+			return 0.0
 		return (2 * precision * recall) / (precision + recall)
