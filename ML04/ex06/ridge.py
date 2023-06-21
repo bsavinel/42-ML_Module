@@ -63,9 +63,10 @@ class MyRidge(mlr):
 		if (not check_matrix(x, -1, self.thetas.shape[0] - 1) or not check_matrix(y, x.shape[0], 1)):
 			return None
 		self.thetas = np.copy(self.thetas.astype('float64'))
+		self.loss_evolution.append(self.loss_(y, self.predict_(x)))
 		for i in range(self.max_iter):
-			self.loss_evolution.append(self.loss_(y, self.predict_(x)))
 			self.thetas = self.thetas - (self.alpha * self.gradient_(x, y))
+			self.loss_evolution.append(self.loss_(y, self.predict_(x)))
 
 	def loss_elem_(self, y, y_hat):
 		if (not check_matrix(y, -1, 1) or not check_matrix(y_hat, y.shape[0], 1)):
@@ -80,4 +81,5 @@ class MyRidge(mlr):
 		newTheta[0] = 0
 		return np.dot(newTheta, newTheta)
 	
+
 	
