@@ -57,7 +57,8 @@ result = pd.read_csv("solar_system_census_planets.csv")
 data = np.array(data[["weight","height","bone_density"]])
 result = np.array(result["Origin"]).reshape(-1, 1)
 
-prediction = []
+predictionEval = []
+predictionTrain = []
 Xtrain, Xeval, Ytrain, Yeval = data_spliter(data, result, 0.7, progSeed)
 XtrainNorm = normalizer_multiline(Xtrain, data)
 XevalNorm = normalizer_multiline(Xeval, data)
@@ -68,16 +69,38 @@ for i in range(4):
 	myLR = MyLR(np.ones((4,1)), 0.1, 100000)
 	myLR.fit_(XtrainNorm, tmpTrain)
 	Yhat = myLR.predict_(XevalNorm)
-	prediction.append(Yhat.reshape(-1))
+	predictionEval.append(Yhat.reshape(-1))
+	Yhat = myLR.predict_(XtrainNorm)
+	predictionTrain.append(Yhat.reshape(-1))
 
 
 resultComp = []
-for i in range(len(prediction[0])):
-	if (prediction[0][i] >= prediction[1][i] and prediction[0][i] >= prediction[2][i] and prediction[0][i] >= prediction[3][i]):
+for i in range(len(predictionTrain[0])):
+	if (predictionTrain[0][i] >= predictionTrain[1][i] and predictionTrain[0][i] >= predictionTrain[2][i] and predictionTrain[0][i] >= predictionTrain[3][i]):
 		resultComp.append(0)
-	elif (prediction[1][i] >= prediction[0][i] and prediction[1][i] >= prediction[2][i] and prediction[1][i] >= prediction[3][i]):
+	elif (predictionTrain[1][i] >= predictionTrain[0][i] and predictionTrain[1][i] >= predictionTrain[2][i] and predictionTrain[1][i] >= predictionTrain[3][i]):
 		resultComp.append(1)
-	elif (prediction[2][i] >= prediction[0][i] and prediction[2][i] >= prediction[1][i] and prediction[2][i] >= prediction[3][i]):
+	elif (predictionTrain[2][i] >= predictionTrain[0][i] and predictionTrain[2][i] >= predictionTrain[1][i] and predictionTrain[2][i] >= predictionTrain[3][i]):
+		resultComp.append(2)
+	else:
+		resultComp.append(3)
+
+resultComp = np.array(resultComp).reshape(-1, 1)
+
+count = 0
+for i in range(Ytrain.shape[0]):
+	if (Ytrain[i] == resultComp[i]):
+		count += 1
+print("Train accuracy:", count / Ytrain.shape[0])
+
+
+resultComp = []
+for i in range(len(predictionEval[0])):
+	if (predictionEval[0][i] >= predictionEval[1][i] and predictionEval[0][i] >= predictionEval[2][i] and predictionEval[0][i] >= predictionEval[3][i]):
+		resultComp.append(0)
+	elif (predictionEval[1][i] >= predictionEval[0][i] and predictionEval[1][i] >= predictionEval[2][i] and predictionEval[1][i] >= predictionEval[3][i]):
+		resultComp.append(1)
+	elif (predictionEval[2][i] >= predictionEval[0][i] and predictionEval[2][i] >= predictionEval[1][i] and predictionEval[2][i] >= predictionEval[3][i]):
 		resultComp.append(2)
 	else:
 		resultComp.append(3)
@@ -88,7 +111,7 @@ count = 0
 for i in range(Yeval.shape[0]):
 	if (Yeval[i] == resultComp[i]):
 		count += 1
-print("Accuracy:", count / Yeval.shape[0])
+print("Eval accuracy:", count / Yeval.shape[0])
 
 
 ax = plt.axes(projection='3d')
