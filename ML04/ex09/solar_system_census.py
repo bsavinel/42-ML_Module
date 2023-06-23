@@ -65,6 +65,19 @@ def add_polynomial_features(x, power):
 		ret = np.concatenate((ret, x ** i), axis=1)
 	return ret
 
+def format_prediction(a,b,c,d):
+	resultComp = []
+	for i in range(len(a)):
+		if (a[i] >= b[i] and a[i] >= c[i] and a[i] >= d[i]):
+			resultComp.append(0)
+		elif (b[i] >= a[i] and b[i] >= c[i] and b[i] >= d[i]):
+			resultComp.append(1)
+		elif (c[i] >= a[i] and c[i] >= b[i] and c[i] >= d[i]):
+			resultComp.append(2)
+		else:
+			resultComp.append(3)
+	return np.array(resultComp).reshape(-1)
+
 #!#################################################################################################
 #!#####################################   Programe   ##############################################
 #!#################################################################################################
@@ -81,8 +94,6 @@ XevalNorm = normalizer_multiline(Xeval, data)
 XtrainNorm = add_polynomial_features(XtrainNorm, 3)
 XevalNorm = add_polynomial_features(XevalNorm, 3)
 
-loss = [-1.,-1.,-1.,-1.]
-lambdas = [0,0,0,0]
 
 try:
 	file = open('model.pickel', 'rb')
@@ -92,40 +103,101 @@ except:
 	exit()
 file.close()
 
-for elem in data:
-	if (loss[elem[0]] == -1. or elem[2] < loss[elem[0]]):
-		lambdas[elem[0]] = elem[1]
-		loss[elem[0]] = elem[2]
+predTab = []
+for i in range(len(data)):
+	predTab.append([[],[],[],[]])
+
+for i in range(len(data)):
+	for j in range(4):
+		model = MyLR(data[i][j][1], lambda_=data[i][j][0])
+		pred = model.predict_(XtrainNorm)
+		predTab[i][j] = pred
+
+
+F1ScoreTab = []
+bestMean = 0
+bestLambda = 0
+for i in range(len(predTab)):
+	OriginPred = format_prediction(predTab[i][0], predTab[i][1], predTab[i][2], predTab[i][3])
+	f1Tab = []
+	for j in range(4):
+		f1Tab.append(MyLR.f1_score_(Ytrain, OriginPred, pos_label=j))
+	f1Tab.append(np.mean(f1Tab))
+	print("Lambda = ", data[i][0][0])
+	print("\tF1 score for origine 0: ", f1Tab[0])
+	print("\tF1 score for origine 1: ", f1Tab[1])
+	print("\tF1 score for origine 2: ", f1Tab[2])
+	print("\tF1 score for origine 3: ", f1Tab[3])
+	print("\tMean F1 score: ", f1Tab[4])
+	F1ScoreTab.append(f1Tab)
+	if (f1Tab[4] >= bestMean):
+		bestMean = f1Tab[4]
+		bestLambda = data[i][0][0]
+print("\nBest lambda: ", bestLambda)
+
+F1ScoreTab =np.array(F1ScoreTab)
+
+print(F1ScoreTab)
+print(F1ScoreTab[:,0])
+
+lambdas = np.array([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+plt.bar(lambdas, F1ScoreTab[:,0], width=0.1, color='r', label='Origine 0')
+plt.title("F1 score for origine 0")
+plt.xlabel("Lambda")
+plt.ylabel("F1 score")
+plt.legend()
+plt.show()
+plt.bar(lambdas, F1ScoreTab[:,1], width=0.1, color='g', label='Origine 1')
+plt.title("F1 score for origine 1")
+plt.xlabel("Lambda")
+plt.ylabel("F1 score")
+plt.legend()
+plt.show()
+plt.bar(lambdas, F1ScoreTab[:,2], width=0.1, color='b', label='Origine 2')
+plt.title("F1 score for origine 2")
+plt.xlabel("Lambda")
+plt.ylabel("F1 score")
+plt.legend()
+plt.show()
+plt.bar(lambdas, F1ScoreTab[:,3], width=0.1, color='y', label='Origine 3')
+plt.title("F1 score for origine 3")
+plt.xlabel("Lambda")
+plt.ylabel("F1 score")
+plt.legend()
+plt.show()
+plt.bar(lambdas, F1ScoreTab[:,4], width=0.1, color='y', label='Mean')
+plt.title("F1 score mean")
+plt.xlabel("Lambda")
+plt.ylabel("F1 score")
+plt.legend()
+plt.show()
+
 
 prediction = []
 for i in range(4):
 	YtmpTrain = np.where(Ytrain == i, 1, 0).reshape(-1, 1)
 	YtmpEval = np.where(Yeval == i, 1, 0).reshape(-1, 1)
-	myLR = MyLR(np.ones((10,1)), 0.1, 6000, penalty='l2', lambda_=lambdas[i])
+	myLR = MyLR(np.ones((10,1)), 0.1, 30000, penality='l2', lambda_=bestLambda)
 	myLR.fit_(XtrainNorm, YtmpTrain)
-	Yhat = myLR.predict_(XevalNorm)
-	prediction.append(Yhat.reshape(-1))
+	prediction.append(myLR.predict_(XevalNorm).reshape(-1))
 
 
-resultComp = []
-for i in range(len(prediction[0])):
-	if (prediction[0][i] >= prediction[1][i] and prediction[0][i] >= prediction[2][i] and prediction[0][i] >= prediction[3][i]):
-		resultComp.append(0)
-	elif (prediction[1][i] >= prediction[0][i] and prediction[1][i] >= prediction[2][i] and prediction[1][i] >= prediction[3][i]):
-		resultComp.append(1)
-	elif (prediction[2][i] >= prediction[0][i] and prediction[2][i] >= prediction[1][i] and prediction[2][i] >= prediction[3][i]):
-		resultComp.append(2)
-	else:
-		resultComp.append(3)
-
-print("f1_score of the model is: ", MyLR.f1_score_(Yeval, np.array(resultComp)))
+OriginPred = format_prediction(prediction[0], prediction[1], prediction[2], prediction[3])
+for j in range(4):
+	f1Tab.append(MyLR.f1_score_(Yeval, OriginPred, pos_label=j))
+print("\nBest model:")
+print("\tF1 score for origine 0: ", f1Tab[0])
+print("\tF1 score for origine 1: ", f1Tab[1])
+print("\tF1 score for origine 2: ", f1Tab[2])
+print("\tF1 score for origine 3: ", f1Tab[3])
+print("\tMean F1 score: ", np.mean(f1Tab))
 
 
 ax = plt.axes(projection='3d')
 Yeval = Yeval.reshape(-1)
-resultComp = np.array(resultComp).reshape(-1)
+OriginPred = np.array(OriginPred).reshape(-1)
 ax.plot(Yeval, Xeval[:,0], Xeval[:,1], label="True value", marker='.', linestyle='None')
-ax.plot(resultComp, Xeval[:,0], Xeval[:,1], label="Prediction", marker='.', linestyle='None')
+ax.plot(OriginPred, Xeval[:,0], Xeval[:,1], label="Prediction", marker='.', linestyle='None')
 ax.set_title('Repartion in function of the weight and the height')
 ax.set_xlabel("zipcode of the civilisation")
 ax.set_ylabel('Weight')
@@ -135,7 +207,7 @@ plt.show()
 
 ax = plt.axes(projection='3d')
 ax.plot(Yeval, Xeval[:,1], Xeval[:,2], label="True value", marker='.', linestyle='None')
-ax.plot(resultComp, Xeval[:,1], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
+ax.plot(OriginPred, Xeval[:,1], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
 ax.set_title('Repartion in function of the height and the bone density')
 ax.set_xlabel("zipcode of the civilisation")
 ax.set_ylabel('Height')
@@ -145,7 +217,7 @@ plt.show()
 
 ax = plt.axes(projection='3d')
 ax.plot(Yeval, Xeval[:,0], Xeval[:,2], label="True value", marker='.', linestyle='None')
-ax.plot(resultComp, Xeval[:,0], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
+ax.plot(OriginPred, Xeval[:,0], Xeval[:,2], label="Prediction", marker='.', linestyle='None')
 ax.set_title('Repartion in function of the weight and the bone density')
 ax.set_xlabel("zipcode of the civilisation")
 ax.set_ylabel('Weight')

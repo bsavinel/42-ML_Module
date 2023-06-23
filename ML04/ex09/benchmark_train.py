@@ -65,6 +65,19 @@ def add_polynomial_features(x, power):
 		ret = np.concatenate((ret, x ** i), axis=1)
 	return ret
 
+def format_prediction(a,b,c,d):
+	resultComp = []
+	for i in range(len(a)):
+		if (a[i] >= b[i] and a[i] >= c[i] and a[i] >= d[i]):
+			resultComp.append(0)
+		elif (b[i] >= a[i] and b[i] >= c[i] and b[i] >= d[i]):
+			resultComp.append(1)
+		elif (c[i] >= a[i] and c[i] >= b[i] and c[i] >= d[i]):
+			resultComp.append(2)
+		else:
+			resultComp.append(3)
+	return np.array(resultComp).reshape(-1)
+
 #!#################################################################################################
 #!#####################################   Programe   ##############################################
 #!#################################################################################################
@@ -75,39 +88,39 @@ result = pd.read_csv("solar_system_census_planets.csv")
 data = np.array(data[["weight","height","bone_density"]])
 result = np.array(result["Origin"]).reshape(-1, 1)
 
-prediction = [[],[],[],[],[]]
 Xtrain, Xeval, Ytrain, Yeval = data_spliter(data, result, 0.7, progSeed)
-XtrainNorm = normalizer_multiline(Xtrain, data)
-XevalNorm = normalizer_multiline(Xeval, data)
+XtrainNorm = add_polynomial_features(normalizer_multiline(Xtrain, data), 3)
+XevalNorm = add_polynomial_features(normalizer_multiline(Xeval, data), 3)
 
 lambdas = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
 color = ["b", "r", "g", "y", "c", "m", "k", "w"]
 
-XtrainNorm = add_polynomial_features(XtrainNorm, 3)
-XevalNorm = add_polynomial_features(XevalNorm, 3)
-
 tab = []
+predTab = []
+for i in range(len(lambdas)):
+	tab.append([[],[],[],[]])
+	predTab.append([[],[],[],[]])
 
 for i in range(4):
 	YtmpTrain = np.where(Ytrain == i, 1, 0).reshape(-1, 1)
 	YtmpEval = np.where(Yeval == i, 1, 0).reshape(-1, 1)
-	for j in lambdas:
-		myLR = MyLR(np.ones((10,1)), 0.1, 6000, penalty='l2', lambda_=j)
+	for valLambda, j in zip(lambdas, range(len(lambdas))):
+		myLR = MyLR(np.ones((10,1)), 0.1, 6000, penality='l2', lambda_=valLambda)
 		myLR.fit_(XtrainNorm, YtmpTrain)
-		Yhat = myLR.predict_(XevalNorm)
-		prediction[int(j * 2.5)].append(Yhat.reshape(-1))
-		plt.plot(myLR.loss_evolution, color[int(j * 2.5)], label="lambda: {}".format(j))
-		print("Model for origine number",i,"with lamba", j, ":")
-		tab.append([i, j, myLR.loss_(YtmpEval, Yhat)])
-		redf1 =  np.where(Yhat >= 0.5, 1, 0)
-		print("\tLoss:", myLR.loss_(YtmpEval, Yhat), "\tF1_score:", myLR.f1_score_(YtmpEval, redf1))
-		print()
-	print()
-	plt.xlabel("Iteration")
-	plt.ylabel("Loss")
-	plt.legend()
-	plt.show()
+		predTab[j][i] = myLR.predict_(XevalNorm)
+		tab[j][i] = [valLambda, myLR.theta]
 
+for i in range(len(predTab)):
+	OriginPred = format_prediction(predTab[i][0], predTab[i][1], predTab[i][2], predTab[i][3])
+	f1Tab = []
+	for j in range(4):
+		f1Tab.append(MyLR.f1_score_(Yeval, OriginPred, pos_label=j))
+	print("Lambda = ", lambdas[i])
+	print("\tF1 score for origine 0: ", f1Tab[0])
+	print("\tF1 score for origine 1: ", f1Tab[1])
+	print("\tF1 score for origine 2: ", f1Tab[2])
+	print("\tF1 score for origine 3: ", f1Tab[3])
+	print("\tMean F1 score: ", np.mean(f1Tab))
 
 file = open('model.pickel', 'wb')
 pickle.dump(tab, file)

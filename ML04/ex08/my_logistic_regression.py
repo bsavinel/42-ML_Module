@@ -41,7 +41,7 @@ class MyLogisticRegression():
 	supported_penalities = ['l2']
 	def __init__(self, theta, alpha=0.001, max_iter=1000, penality='l2', lambda_=1.0):
 		if ((not isinstance(alpha, float)) or (not isinstance(max_iter, int)) or max_iter < 0 or not check_matrix(theta, -1, 1)):
-			raise ValueError 
+			return None
 		self.alpha = alpha
 		self.max_iter = max_iter
 		self.theta = theta
@@ -98,7 +98,7 @@ class MyLogisticRegression():
 		copyY = y.copy().astype('float64')
 		self.loss_evolution.append(self.loss_(y, self.predict_(x)))
 		for i in range(self.max_iter):
-			self.theta = self.theta - (self.alpha * self.log_gradient(copyX, copyY))
+			self.theta = self.theta - (self.alpha * self.gradient_(copyX, copyY))
 			self.loss_evolution.append(self.loss_(y, self.predict_(x)))
 
 	@staticmethod
