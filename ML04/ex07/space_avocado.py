@@ -124,43 +124,52 @@ if __name__ == "__main__":
 		tmpXtrain = add_polynomial_features(Xtrain, elem[0])
 		tmpXeval =  add_polynomial_features(Xeval, elem[0])
 		linearModel = MyRidge(elem[2], lambda_=elem[1])
-		predict = linearModel.predict_(tmpXeval)
-		loss = linearModel.loss_(Yeval, predict)
-		print("loss of", key.format(elem[0], elem[1]),":", loss)
+		predict = linearModel.predict_(tmpXtrain)
+		loss = linearModel.loss_(Ytrain, predict)
+		print("Model:", key.format(elem[0], elem[1]))
+		print("\tEval loss :", linearModel.loss_(Yeval, linearModel.predict_(tmpXeval)))
+		print("\tTrain loss :", loss)
 		model_loss[key.format(elem[0], elem[1])] = loss
 		if (loss < max_loss or max_loss == -1):
 			best = elem
 			max_loss = loss	
-	print ("\nThe best is with :", min(model_loss, key=model_loss.get))
+	print ("\nThe best model is", min(model_loss, key=model_loss.get))
 
-	theta =  np.ones((Xtrain.shape[1] * best[0] + 1, 1))
-	linearModel = MyRidge(theta, alpha=0.001, max_iter=10000, lambda_=best[1])
-	a = add_polynomial_features(X, elem[0])
-	XtrainBest = add_polynomial_features(Xtrain, best[0])
-	XevalBest =  add_polynomial_features(Xeval, best[0])
-	linearModel.fit_(XtrainBest, Ytrain)
+	lambdas = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+	predictionTable = []
 
-	predict = linearModel.predict_(XevalBest)
-	print("Theta of the best model train :",linearModel.thetas)
-	TruePredict = denormalizer(predict, Y)
-	print("Loss of the best model :",linearModel.loss_(Yeval, predict))
+	for ValLambda, i in zip(lambdas, range(len(lambdas))):
+		theta =  np.ones((Xtrain.shape[1] * best[0] + 1, 1))
+		linearModel = MyRidge(theta, alpha=0.001, max_iter=30000, lambda_=ValLambda)
+		XtrainBest = add_polynomial_features(Xtrain, best[0])
+		XevalBest =  add_polynomial_features(Xeval, best[0])
+		linearModel.fit_(XtrainBest, Ytrain)
+		predict = linearModel.predict_(XevalBest)
+		TruePredict = denormalizer(predict, Y)
+		predictionTable.append(TruePredict)
+		print("Loss of the best model with lambda", ValLambda, ":", linearModel.loss_(Yeval, predict))
+
+	color = ["r.", "y.", "c.", "m.", "k.", "g.", "w."]
 
 	plt.plot(TrueXEval[:,0], TrueYEval, 'bo', label="Price")
-	plt.plot(TrueXEval[:,0], TruePredict, 'g.', label="Predicted price")
+	for ValLambda, i in zip(lambdas, range(len(lambdas))):
+		plt.plot(TrueXEval[:,0], predictionTable[i], color[i], label="Predicted price with lambda = {}".format(ValLambda))
 	plt.xlabel("Weight")
 	plt.ylabel("Price")
 	plt.legend()
 	plt.show()
 
 	plt.plot(TrueXEval[:,1], TrueYEval, 'bo', label="Price")
-	plt.plot(TrueXEval[:,1], TruePredict, 'g.', label="Predicted price")
+	for ValLambda, i in zip(lambdas, range(len(lambdas))):
+		plt.plot(TrueXEval[:,1], predictionTable[i], color[i], label="Predicted price with lambda = {}".format(ValLambda))
 	plt.xlabel("Distance")
 	plt.ylabel("Price")
 	plt.legend()
 	plt.show()
 
 	plt.plot(TrueXEval[:,2], TrueYEval, 'bo', label="Price")
-	plt.plot(TrueXEval[:,2], TruePredict, 'g.', label="Predicted price")
+	for ValLambda, i in zip(lambdas, range(len(lambdas))):
+		plt.plot(TrueXEval[:,2], predictionTable[i], color[i], label="Predicted price with lambda = {}".format(ValLambda))
 	plt.xlabel("Time")
 	plt.ylabel("Price")
 	plt.legend()

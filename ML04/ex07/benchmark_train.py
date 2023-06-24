@@ -127,6 +127,7 @@ if __name__ == "__main__":
 			linearModel.fit_(tmpXtrain, Ytrain)
 			# print(linearModel.thetas)
 			predict = linearModel.predict_(tmpXeval)
+			loss = linearModel.mse_(Yeval.reshape(-1), predict.reshape(-1))
 			loss = linearModel.loss_(Yeval, predict)
 			print("loss of", key.format(i + 1, j),":", loss)
 			plt.plot(linearModel.loss_evolution, color[int(j * 2.5)], label=labelKey.format(j))
