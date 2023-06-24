@@ -137,9 +137,6 @@ print("\nBest lambda: ", bestLambda)
 
 F1ScoreTab =np.array(F1ScoreTab)
 
-print(F1ScoreTab)
-print(F1ScoreTab[:,0])
-
 lambdas = np.array([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
 plt.bar(lambdas, F1ScoreTab[:,0], width=0.1, color='r', label='Origine 0')
 plt.title("F1 score for origine 0")
